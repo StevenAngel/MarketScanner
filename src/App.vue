@@ -16,7 +16,7 @@ h1 {
   text-align: left;
 }
 
-p {
+body {
   font-family: 'Monaco', Sans-serif;
 }
 </style>

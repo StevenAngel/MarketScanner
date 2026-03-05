@@ -4,8 +4,8 @@ import Market from './Market.vue'
 
 let socket = null
 const markets = ref({
-  BTC: { price: '5000', change24hPercent: '-2%', change24h: '-1000' },
-  ETH: { price: '5000', change24hPercent: '-2%', change24h: '-1000' },
+  BTC: { price: '5000', change24hPercent: '-2%', change24h: '-1000', volumeCoin: '1', volumeUSD: '1' },
+  ETH: { price: '5000', change24hPercent: '-2%', change24h: '-1000', volumeCoin: '1', volumeUSD: '1' },
 })
 
 /**
@@ -34,11 +34,16 @@ const connect = () => {
   socket.onmessage = (event) => {
     event = JSON.parse(event.data)
     console.log(event)
-    const symbol = event.s.replace('USDT', '')
-    const price = event.c
-    markets.value[symbol].price = price
-    markets.value[symbol].change24hPercent = event.P
-    markets.value[symbol].change24h = event.p
+    if (event.e == "24hrTicker") {
+      const symbol = event.s.replace('USDT', '')
+      const price = event.c
+      markets.value[symbol].price = price
+      markets.value[symbol].change24hPercent = event.P
+      markets.value[symbol].change24h = event.p
+      markets.value[symbol].volumeCoin = event.v
+      markets.value[symbol].volumeUSD = event.q
+    }
+
   }
 }
 
@@ -48,8 +53,33 @@ onUnmounted(() => socket?.close())
 </script>
 
 <template>
-  <Market v-for="(data, symbol) in markets" :symbol="symbol" :price="data.price"
-    :change24hPercent="data.change24hPercent" :change24h="data.change24h" />
+  <div>
+    <div class="container">
+      <div class="headerRow">
+        <div class="flex-1">Symbol</div>
+        <div class="flex-1">Price</div>
+        <div class="flex-1">Change 24h</div>
+        <div class="flex-1">Change 24h USD</div>
+        <div class="flex-1">Volume 24h</div>
+        <div class="flex-1">Volume 24h USD</div>
+      </div>
+      <Market v-for="(data, symbol) in markets" :symbol="symbol" :price="data.price"
+        :change24hPercent="data.change24hPercent" :change24h="data.change24h" :volumeCoin="data.volumeCoin"
+        :volumeUSD="data.volumeUSD" />
+    </div>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.flex-1 {
+  flex: 1;
+}
+
+.headerRow {
+  display: flex;
+}
+
+.container {
+  margin: 1rem;
+}
+</style>
