@@ -1,5 +1,5 @@
 <script setup>
-import MarketsContainer from './components/MarketsContainer.vue'
+import MarketsContainer from './components/MarketsTable.vue'
 </script>
 
 <template>
@@ -18,5 +18,16 @@ h1 {
 
 body {
   font-family: 'Monaco', Sans-serif;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: center;
+}
+
+td,
+th {
+  padding: 1rem;
 }
 </style>
