@@ -1,8 +1,10 @@
 <script setup>
 import MarketsContainer from './components/markets/MarketsTable.vue'
+import Navbar from './components/layout/Navbar.vue'
 </script>
 
 <template>
+  <Navbar />
   <MarketsContainer />
 </template>
 
@@ -10,14 +12,12 @@ import MarketsContainer from './components/markets/MarketsTable.vue'
 
 <style>
 h1 {
-  font-family: 'Monaco', Sans-serif;
-  color: #8f00bbff;
   font-size: 2rem;
-  text-align: left;
 }
 
 body {
   font-family: 'Monaco', Sans-serif;
+  margin: 0;
 }
 
 table {
