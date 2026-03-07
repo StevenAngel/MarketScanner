@@ -4,7 +4,6 @@ import MarketCell from './MarketCell.vue'
 
 // Get data passed from parent with defineProps
 const market = defineProps(['symbol', 'price', 'change24hPercent', 'change24h', 'volumeCoin', 'volumeUSD', 'lastItem'])
-console.log(market.change24hPercent, market.change24h, "CHECK")
 </script>
 
 <template>

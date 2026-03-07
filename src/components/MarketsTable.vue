@@ -1,11 +1,28 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, shallowRef, onMounted, onUnmounted } from 'vue'
 import Market from './MarketRow.vue'
 
 let socket = null
+
+// ShallowRef is not deep reactive, only on markets.value change, not markets.value[symbol] = xyz 
 const markets = ref({
   // BTC: { price: '5000', change24hPercent: '-2%', change24h: '-1000', volumeCoin: '1', volumeUSD: '1' },
 })
+
+// Throttling data
+let internalMarkets = {}
+let throttleTimer = null
+
+// Updates markets ref() every 200ms
+const updateData = (newData) => {
+  if (!throttleTimer) {
+    throttleTimer = setTimeout(() => {
+      // {...newData} needed because newData would point at the same reference so vue does not "see" new data
+      markets.value = { ...newData }
+      throttleTimer = null
+    }, 200)
+  }
+}
 
 // Connect websocket onMount, subscribe to all tickers onOpen
 const connect = () => {
@@ -33,12 +50,19 @@ const connect = () => {
     event = JSON.parse(event.data)
     if (event.e == "24hrTicker") {
       const symbol = event.s.replace('USDT', '')
-      const price = event.c
-      markets.value[symbol].price = price
-      markets.value[symbol].change24hPercent = event.P
-      markets.value[symbol].change24h = event.p
-      markets.value[symbol].volumeCoin = event.v
-      markets.value[symbol].volumeUSD = event.q
+      // markets.value[symbol].price = event.c
+      // markets.value[symbol].change24hPercent = event.P
+      // markets.value[symbol].change24h = event.p
+      // markets.value[symbol].volumeCoin = event.v
+      // markets.value[symbol].volumeUSD = event.q
+
+      if (!internalMarkets[symbol]) internalMarkets[symbol] = {}
+      internalMarkets[symbol].price = event.c
+      internalMarkets[symbol].change24hPercent = event.P
+      internalMarkets[symbol].change24h = event.p
+      internalMarkets[symbol].volumeCoin = event.v
+      internalMarkets[symbol].volumeUSD = event.q
+      updateData(internalMarkets)
     }
   }
 }
@@ -53,6 +77,7 @@ async function loadMarkets() {
   tickers = tickers.sort((a, b) => Number(b.quoteVolume) - Number(a.quoteVolume))
   tickers = tickers.slice(0, 100)
   tickers = tickers.forEach(ticker => {
+    internalMarkets[ticker.symbol.replace("USDT", "")] = { price: ticker.askPrice, change24hPercent: ticker.priceChangePercent, change24h: ticker.priceChange, volumeCoin: ticker.volume, volumeUSD: ticker.quoteVolume }
     markets.value[ticker.symbol.replace("USDT", "")] = { price: ticker.askPrice, change24hPercent: ticker.priceChangePercent, change24h: ticker.priceChange, volumeCoin: ticker.volume, volumeUSD: ticker.quoteVolume }
   })
 }
@@ -104,6 +129,11 @@ onUnmounted(() => socket?.close())
 <style scoped>
 .container {
   margin: 1rem;
+}
+
+table {
+  width: 100%;
+  overflow-x: auto;
 }
 
 th {
