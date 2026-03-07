@@ -1,0 +1,31 @@
+:root {
+    /* Hintergrundfarben */
+    --bg-dark: #0B0E14;
+    --bg-card: #161B22;
+
+    /* Akzentfarben (Dein Lila) */
+    --primary-purple: #7C3AED;
+    --secondary-purple: #4C1D95;
+    --accent-glow: rgba(124, 58, 237, 0.3);
+
+    /* Textfarben */
+    --text-primary: #F0F6FC;
+    --text-secondary: #8B949E;
+
+    /* Abstände & Radien */
+    --radius-md: 8px;
+    --nav-height: 60px;
+}
+
+* {
+    margin: 0;
+}
+
+body {
+    font-family: 'Monaco', Sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    /* Falls du eine Krypto-Schriftart nutzt */
+    min-height: 100vh;
+}
