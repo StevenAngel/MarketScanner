@@ -15,11 +15,6 @@ h1 {
   font-size: 2rem;
 }
 
-body {
-  font-family: 'Monaco', Sans-serif;
-  margin: 0;
-}
-
 table {
   border-collapse: separate;
   border-spacing: 0;
