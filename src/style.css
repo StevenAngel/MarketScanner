@@ -1,0 +1,26 @@
+:root {
+    --bg-main: #0F172A;
+    --bg-surface: #1E293B;
+    /* Für deine Market-Table */
+    --border-subtle: #334155;
+
+    --brand-purple: #8B5CF6;
+    --crypto-up: #10B981;
+    --crypto-down: #F43F5E;
+
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+}
+
+* {
+    margin: 0;
+}
+
+body {
+    font-family: 'Monaco', Sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    /* Falls du eine Krypto-Schriftart nutzt */
+    min-height: 100vh;
+}
