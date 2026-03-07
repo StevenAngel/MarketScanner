@@ -7,6 +7,7 @@
             <h1 class="navbarItem">Market Scanner</h1>
             <div class="navbarItem">Markets</div>
             <div class="navbarItem">News</div>
+            <div class="web3Login">Connect Wallet</div>
         </div>
     </div>
 </template>
@@ -29,5 +30,7 @@
     align-items: baseline;
 }
 
-.navbarItem {}
+.web3Login {
+    margin-left: auto;
+}
 </style>
