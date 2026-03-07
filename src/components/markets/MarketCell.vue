@@ -55,7 +55,7 @@ const formatted = computed(() => {
 }
 
 .normal {
-    color: black;
+    color: var(--text-primary);
     transition: color 0.2s;
 }
 </style>
