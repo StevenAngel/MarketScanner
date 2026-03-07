@@ -1,6 +1,6 @@
 <script setup>
 import { ref, shallowRef, onMounted, onUnmounted } from 'vue'
-import Market from './MarketRow.vue'
+import MarketTableRow from './MarketTableRow.vue'
 
 let socket = null
 
@@ -24,6 +24,13 @@ const updateData = (newData) => {
   }
 }
 
+const sortMarkets = (value) => {
+  switch (value) {
+    case 'symbol':
+      console.log("symbol")
+  }
+}
+
 // Connect websocket onMount, subscribe to all tickers onOpen
 const connect = () => {
   const socket = new WebSocket('wss://data-stream.binance.vision/ws')
@@ -37,15 +44,6 @@ const connect = () => {
     }))
   }
 
-  //**
-  // Event:
-  // {"e":"24hrTicker","E":1772574569035,"s":"BTCUSDT","p":"-1437.89000000",
-  //  "P":"-2.071","w":"67834.63514256","x":"69442.02000000","c":"68004.12000000",
-  //  "Q":"0.00250000","b":"68004.11000000","B":"0.25511000","a":"68004.12000000",
-  //  "A":"1.46494000","o":"69442.01000000","h":"69506.94000000","l":"66158.00000000",
-  //  "v":"25691.57255000","q":"1742778450.16795780","O":1772488169013,
-  //  "C":1772574569013,"F":6046790866,"L":6054521811,"n":7730946}
-  //  */
   socket.onmessage = (event) => {
     event = JSON.parse(event.data)
     if (event.e == "24hrTicker") {
@@ -90,28 +88,100 @@ onUnmounted(() => socket?.close())
       <table>
         <thead>
           <tr>
-            <th class="firstChild">
-              SYMBOL
+            <th @click="sortMarkets('symbol')">
+              <div class="headerContent">
+                <span>
+                  SYMBOL
+                </span>
+                <div class="arrowContainer">
+                  <span>
+                    ▲
+                  </span>
+                  <span>
+                    ▼
+                  </span>
+                </div>
+              </div>
             </th>
             <th>
-              PRICE
+              <div class="headerContent">
+                <span>
+                  PRICE
+                </span>
+                <div class="arrowContainer">
+                  <span>
+                    ▲
+                  </span>
+                  <span>
+                    ▼
+                  </span>
+                </div>
+              </div>
             </th>
             <th>
-              CHANGE %
+              <div class="headerContent">
+                <span>
+                  CHANGE %
+                </span>
+                <div class="arrowContainer">
+                  <span>
+                    ▲
+                  </span>
+                  <span>
+                    ▼
+                  </span>
+                </div>
+              </div>
             </th>
             <th>
-              CHANGE USD
+              <div class="headerContent">
+                <span>
+                  CHANGE USD
+                </span>
+                <div class="arrowContainer">
+                  <span>
+                    ▲
+                  </span>
+                  <span>
+                    ▼
+                  </span>
+                </div>
+              </div>
             </th>
             <th>
-              VOLUME
+              <div class="headerContent">
+                <span>
+                  VOLUME
+                </span>
+                <div class="arrowContainer">
+                  <span>
+                    ▲
+                  </span>
+                  <span>
+                    ▼
+                  </span>
+                </div>
+              </div>
             </th>
-            <th class="lastChild">
-              VOLUME USD
+            <th>
+              <div class="headerContent">
+                <span>
+                  VOLUME USD
+                </span>
+                <div class="arrowContainer">
+                  <span>
+                    ▲
+                  </span>
+                  <span>
+                    ▼
+                  </span>
+                </div>
+              </div>
             </th>
           </tr>
         </thead>
         <tbody>
-          <Market v-for="(data, symbol, index) in markets" :symbol="symbol" :price="data.price"
+          <MarketTableRow v-for="(data, symbol, index) in markets" :symbol="symbol" :price="data.price"
             :change24hPercent="data.change24hPercent" :change24h="data.change24h" :volumeCoin="data.volumeCoin"
             :volumeUSD="data.volumeUSD" :lastItem="index != Object.keys(markets).length - 1" />
         </tbody>
@@ -131,6 +201,20 @@ table {
 }
 
 th {
-  border-bottom: 2px solid;
+  border-bottom: 1px solid var(--border-subtle);
+  cursor: pointer;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+
+.arrowContainer {
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
 }
 </style>

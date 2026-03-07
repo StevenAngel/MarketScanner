@@ -1,11 +1,11 @@
 <script setup>
-import MarketsContainer from './components/markets/MarketsTable.vue'
+import MarketTable from './components/markets/MarketTable.vue'
 import Navbar from './components/layout/Navbar.vue'
 </script>
 
 <template>
   <Navbar />
-  <MarketsContainer />
+  <MarketTable />
 </template>
 
 <style scoped></style>
