@@ -50,12 +50,6 @@ const connect = () => {
     event = JSON.parse(event.data)
     if (event.e == "24hrTicker") {
       const symbol = event.s.replace('USDT', '')
-      // markets.value[symbol].price = event.c
-      // markets.value[symbol].change24hPercent = event.P
-      // markets.value[symbol].change24h = event.p
-      // markets.value[symbol].volumeCoin = event.v
-      // markets.value[symbol].volumeUSD = event.q
-
       if (!internalMarkets[symbol]) internalMarkets[symbol] = {}
       internalMarkets[symbol].price = event.c
       internalMarkets[symbol].change24hPercent = event.P

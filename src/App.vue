@@ -1,5 +1,5 @@
 <script setup>
-import MarketsContainer from './components/MarketsTable.vue'
+import MarketsContainer from './components/markets/MarketsTable.vue'
 </script>
 
 <template>
