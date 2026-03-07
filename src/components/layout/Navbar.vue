@@ -16,12 +16,13 @@ import Logo from '../../assets/branding/logo.png'
 <style scoped>
 .navbar {
     width: 100%;
-    background: linear-gradient(135deg, #7C3AED 0%, #4C1D95 100%);
+    background-color: var(--bg-main);
     color: var(--text-primary);
     padding: 0.1rem;
-    position: sticky;
-    top: 0;
+    /* position: sticky;
+    top: 0; */
     z-index: 100;
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 .innerNavbar {
@@ -29,6 +30,7 @@ import Logo from '../../assets/branding/logo.png'
     gap: 1rem;
     margin: 1rem;
     align-items: center;
+    font-size: 1.5rem;
 }
 
 .logo {
