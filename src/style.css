@@ -23,4 +23,6 @@ body {
     font-family: 'Inter', sans-serif;
     /* Falls du eine Krypto-Schriftart nutzt */
     min-height: 100vh;
+    font-size: medium;
+    font-weight: 600;
 }
