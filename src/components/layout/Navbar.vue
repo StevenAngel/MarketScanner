@@ -1,10 +1,11 @@
 <script setup>
+import Logo from '../../assets/branding/logo.png'
 </script>
 
 <template>
     <div class="navbar">
         <div class="innerNavbar">
-            <h1 class="navbarItem">Market Scanner</h1>
+            <img :src="Logo" class="logo" />
             <div class="navbarItem">Markets</div>
             <div class="navbarItem">News</div>
             <div class="web3Login">Connect Wallet</div>
@@ -27,7 +28,11 @@
     display: flex;
     gap: 1rem;
     margin: 1rem;
-    align-items: baseline;
+    align-items: center;
+}
+
+.logo {
+    height: 5rem;
 }
 
 .web3Login {
