@@ -1,20 +1,15 @@
 :root {
-    /* Hintergrundfarben */
-    --bg-dark: #0B0E14;
-    --bg-card: #161B22;
+    --bg-main: #0F172A;
+    --bg-surface: #1E293B;
+    /* Für deine Market-Table */
+    --border-subtle: #334155;
 
-    /* Akzentfarben (Dein Lila) */
-    --primary-purple: #7C3AED;
-    --secondary-purple: #4C1D95;
-    --accent-glow: rgba(124, 58, 237, 0.3);
+    --brand-purple: #8B5CF6;
+    --crypto-up: #10B981;
+    --crypto-down: #F43F5E;
 
-    /* Textfarben */
-    --text-primary: #F0F6FC;
-    --text-secondary: #8B949E;
-
-    /* Abstände & Radien */
-    --radius-md: 8px;
-    --nav-height: 60px;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
 }
 
 * {
@@ -23,7 +18,7 @@
 
 body {
     font-family: 'Monaco', Sans-serif;
-    background-color: var(--bg-dark);
+    background-color: var(--bg-main);
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
     /* Falls du eine Krypto-Schriftart nutzt */
