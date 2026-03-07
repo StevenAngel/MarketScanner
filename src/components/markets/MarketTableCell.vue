@@ -45,12 +45,12 @@ const formatted = computed(() => {
 
 <style scoped>
 .green {
-    color: green;
+    color: var(--crypto-up);
     transition: color 0.2s;
 }
 
 .red {
-    color: red;
+    color: var(--crypto-down);
     transition: color 0.2s;
 }
 
