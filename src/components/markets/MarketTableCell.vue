@@ -1,21 +1,29 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-const props = defineProps(['value', 'type', 'isLast'])
+const props = defineProps(['value', 'id', 'type', 'isLast'])
 const colorClass = ref('normal')
 let timeoutId = null
+let lastId = props.id
 
-// Watch for props value changes
+/**
+ * Watch for props value changes and switch color
+ * Uses id, to check if props of item has changed in cell or if table is just sorted. If sorted => no color change
+ */
 watch(() => props.value, (newValue, oldValue) => {
-    colorClass.value = Number(newValue) > Number(oldValue) ? 'green' : 'red'
+    if (props.id == lastId) {
+        colorClass.value = Number(newValue) > Number(oldValue) ? 'green' : 'red'
 
-    // Reset timeout, no double timeout
-    if (timeoutId) {
-        clearTimeout(timeoutId)
+        // Reset timeout, no double timeout
+        if (timeoutId) {
+            clearTimeout(timeoutId)
+        }
+        timeoutId = setTimeout(() => {
+            colorClass.value = 'normal'
+            timeoutId = null
+        }, 5000)
+    } else {
+        lastId = props.id
     }
-    timeoutId = setTimeout(() => {
-        colorClass.value = 'normal'
-        timeoutId = null
-    }, 5000)
 })
 
 // Formatting numbers consistently

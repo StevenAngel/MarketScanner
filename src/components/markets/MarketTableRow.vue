@@ -8,13 +8,13 @@ const market = defineProps(['symbol', 'index', 'price', 'changePercent', 'change
 
 <template>
   <tr>
-    <MarketTableCell :value="market.index" type="index" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.symbol" type="symbol" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.price" type="usd" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.changePercent" type="percent" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.change" type="usd" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.volume" type="volume" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.volumeUSD" type="usd" :isLast="market.lastItem" />
+    <MarketTableCell :value="market.index" type="index" :id="market.index" :isLast="market.lastItem" />
+    <MarketTableCell :value="market.symbol" type="symbol" :id="market.index" :isLast="market.lastItem" />
+    <MarketTableCell :value="market.price" type="usd" :id="market.index" :isLast="market.lastItem" />
+    <MarketTableCell :value="market.changePercent" type="percent" :id="market.index" :isLast="market.lastItem" />
+    <MarketTableCell :value="market.change" type="usd" :id="market.index" :isLast="market.lastItem" />
+    <MarketTableCell :value="market.volume" type="volume" :id="market.index" :isLast="market.lastItem" />
+    <MarketTableCell :value="market.volumeUSD" type="usd" :id="market.index" :isLast="market.lastItem" />
   </tr>
 </template>
 
