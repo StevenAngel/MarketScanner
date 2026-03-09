@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import MarketTableCell from './MarketTableCell.vue'
 
 // Get data passed from parent with defineProps
-const market = defineProps(['symbol', 'index', 'price', 'change24hPercent', 'change24h', 'volumeCoin', 'volumeUSD', 'lastItem'])
+const market = defineProps(['symbol', 'index', 'price', 'changePercent', 'change', 'volume', 'volumeUSD', 'lastItem'])
 </script>
 
 <template>
@@ -11,9 +11,9 @@ const market = defineProps(['symbol', 'index', 'price', 'change24hPercent', 'cha
     <MarketTableCell :value="market.index" type="index" :isLast="market.lastItem" />
     <MarketTableCell :value="market.symbol" type="symbol" :isLast="market.lastItem" />
     <MarketTableCell :value="market.price" type="usd" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.change24hPercent" type="percent" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.change24h" type="usd" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.volumeCoin" type="volume" :isLast="market.lastItem" />
+    <MarketTableCell :value="market.changePercent" type="percent" :isLast="market.lastItem" />
+    <MarketTableCell :value="market.change" type="usd" :isLast="market.lastItem" />
+    <MarketTableCell :value="market.volume" type="volume" :isLast="market.lastItem" />
     <MarketTableCell :value="market.volumeUSD" type="usd" :isLast="market.lastItem" />
   </tr>
 </template>
