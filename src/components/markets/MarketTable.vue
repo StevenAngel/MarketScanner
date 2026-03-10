@@ -115,131 +115,130 @@ onUnmounted(() => socket?.close())
 </script>
 
 <template>
-  <div>
-    <div class="container">
-      <table>
-        <thead>
-          <tr>
-            <th @click="sortMarkets('index')">
-              <div class="headerContent">
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th @click="sortMarkets('index')">
+            <div class="headerContent">
+              <span>
+                #
+              </span>
+              <div class="arrowContainer">
                 <span>
-                  #
+                  ▲
                 </span>
-                <div class="arrowContainer">
-                  <span>
-                    ▲
-                  </span>
-                  <span>
-                    ▼
-                  </span>
-                </div>
-              </div>
-            </th>
-            <th @click="sortMarkets('symbol')">
-              <div class="headerContent">
                 <span>
-                  SYMBOL
+                  ▼
                 </span>
-                <div class="arrowContainer">
-                  <span>
-                    ▲
-                  </span>
-                  <span>
-                    ▼
-                  </span>
-                </div>
               </div>
-            </th>
-            <th @click="sortMarkets('price')">
-              <div class="headerContent">
+            </div>
+          </th>
+          <th @click="sortMarkets('symbol')">
+            <div class="headerContent">
+              <span>
+                SYMBOL
+              </span>
+              <div class="arrowContainer">
                 <span>
-                  PRICE
+                  ▲
                 </span>
-                <div class="arrowContainer">
-                  <span>
-                    ▲
-                  </span>
-                  <span>
-                    ▼
-                  </span>
-                </div>
-              </div>
-            </th>
-            <th @click="sortMarkets('changePercent')">
-              <div class="headerContent">
                 <span>
-                  CHANGE %
+                  ▼
                 </span>
-                <div class="arrowContainer">
-                  <span>
-                    ▲
-                  </span>
-                  <span>
-                    ▼
-                  </span>
-                </div>
               </div>
-            </th>
-            <th @click="sortMarkets('change')">
-              <div class="headerContent">
+            </div>
+          </th>
+          <th @click="sortMarkets('price')">
+            <div class="headerContent">
+              <span>
+                PRICE
+              </span>
+              <div class="arrowContainer">
                 <span>
-                  CHANGE $
+                  ▲
                 </span>
-                <div class="arrowContainer">
-                  <span>
-                    ▲
-                  </span>
-                  <span>
-                    ▼
-                  </span>
-                </div>
-              </div>
-            </th>
-            <th @click="sortMarkets('volume')">
-              <div class="headerContent">
                 <span>
-                  VOLUME
+                  ▼
                 </span>
-                <div class="arrowContainer">
-                  <span>
-                    ▲
-                  </span>
-                  <span>
-                    ▼
-                  </span>
-                </div>
               </div>
-            </th>
-            <th @click="sortMarkets('volumeUSD')">
-              <div class="headerContent">
+            </div>
+          </th>
+          <th @click="sortMarkets('changePercent')">
+            <div class="headerContent">
+              <span>
+                CHANGE %
+              </span>
+              <div class="arrowContainer">
                 <span>
-                  VOLUME $
+                  ▲
                 </span>
-                <div class="arrowContainer">
-                  <span>
-                    ▲
-                  </span>
-                  <span>
-                    ▼
-                  </span>
-                </div>
+                <span>
+                  ▼
+                </span>
               </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <MarketTableRow v-for="(data, symbol, index) in sortedMarkets" :symbol="symbol" :index="data.index"
-            :price="data.price" :changePercent="data.changePercent" :change="data.change" :volume="data.volume"
-            :volumeUSD="data.volumeUSD" :lastItem="index != Object.keys(markets).length - 1" />
-        </tbody>
-      </table>
-    </div>
+            </div>
+          </th>
+          <th @click="sortMarkets('change')">
+            <div class="headerContent">
+              <span>
+                CHANGE $
+              </span>
+              <div class="arrowContainer">
+                <span>
+                  ▲
+                </span>
+                <span>
+                  ▼
+                </span>
+              </div>
+            </div>
+          </th>
+          <th @click="sortMarkets('volume')">
+            <div class="headerContent">
+              <span>
+                VOLUME
+              </span>
+              <div class="arrowContainer">
+                <span>
+                  ▲
+                </span>
+                <span>
+                  ▼
+                </span>
+              </div>
+            </div>
+          </th>
+          <th @click="sortMarkets('volumeUSD')">
+            <div class="headerContent">
+              <span>
+                VOLUME $
+              </span>
+              <div class="arrowContainer">
+                <span>
+                  ▲
+                </span>
+                <span>
+                  ▼
+                </span>
+              </div>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <MarketTableRow v-for="(data, symbol, index) in sortedMarkets" :symbol="symbol" :index="data.index"
+          :price="data.price" :changePercent="data.changePercent" :change="data.change" :volume="data.volume"
+          :volumeUSD="data.volumeUSD" :lastItem="index != Object.keys(markets).length - 1" />
+      </tbody>
+    </table>
   </div>
 </template>
 
 <style scoped>
 .container {
   margin: 1rem;
+  flex: 1;
 }
 
 table {

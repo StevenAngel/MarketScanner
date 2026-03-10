@@ -6,8 +6,10 @@ import NewsFeedSidebar from './components/newsFeed/NewsFeedSidebar.vue';
 
 <template>
   <Navbar />
-  <MarketTable />
-  <NewsFeedSidebar />
+  <div class="tableFeed">
+    <MarketTable />
+    <NewsFeedSidebar />
+  </div>
 </template>
 
 <style scoped></style>
@@ -26,5 +28,9 @@ table {
 td,
 th {
   padding: 1rem;
+}
+
+.tableFeed {
+  display: flex;
 }
 </style>
