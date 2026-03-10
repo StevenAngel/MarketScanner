@@ -240,6 +240,8 @@ onUnmounted(() => socket?.close())
 <style scoped>
 .container {
   margin: 1rem;
+  flex: 1;
+
 }
 
 table {
