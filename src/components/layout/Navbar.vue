@@ -1,6 +1,6 @@
 <script setup>
 import Logo from '../../assets/branding/logo.png'
-import CustomButton from './CustomButton.vue';
+import WalletConnectButton from '../walletConnect/WalletConnectButton.vue';
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import CustomButton from './CustomButton.vue';
             <img :src="Logo" class="logo" />
             <div class="navbarItem">Markets</div>
             <div class="navbarItem">News</div>
-            <CustomButton class="web3Login" text="Connect Wallet" />
+            <WalletConnectButton class="web3Login" />
         </div>
     </div>
 </template>
