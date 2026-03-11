@@ -2,11 +2,10 @@
 import { onMounted, ref } from 'vue';
 import NewsItem from './NewsItem.vue';
 
-let feed = ref([]);
+const feed = ref([]);
 // Backend needed
 const loadFeed = async () => {
     feed.value = await fetch('http://localhost:3000/rss').then(res => res.json()).catch(err => console.error(err))
-    console.log(feed.value)
 }
 
 onMounted(loadFeed)
@@ -15,7 +14,7 @@ onMounted(loadFeed)
 <template>
     <div class="newsSidebar">
         <h2>News Feed</h2>
-        <NewsItem v-for="item in feed" :imgSrc="item['bnmedia:post-thumbnail']['bnmedia:url']" :text="item.title"
+        <NewsItem v-for="(item, index) in feed.slice(0, 20)" :key="index" :imgSrc="item.imageUrl" :text="item.title"
             :link="item.link" />
     </div>
 </template>

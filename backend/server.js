@@ -9,16 +9,20 @@ app.use(express.json())
 app.use(cors())
 
 app.get('/rss', async (req, res) => {
-    const feed = await fetch('https://news.bitcoin.com/feed/', {
+    const feed = await fetch('https://cointelegraph.com/rss', {
         headers: {
-            // Ein gängiger User-Agent String für Chrome
+            // Gängiger User-Agent String für Chrome
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8'
         }
     }).then(res => res.text()).catch(err => console.error(err))
-
     // Parse xml to json
-    const news = parser.parse(feed).rss.channel.item
+    const parsed = parser.parse(feed).rss.channel.item
+    const news = []
+    parsed.forEach(element => {
+        const imageUrl = element.description.split("src=")[1].match(/"(.*?)"/)[1]
+        news.push({ title: element.title, link: element.link, imageUrl })
+    });
     res.send(news)
 })
 
