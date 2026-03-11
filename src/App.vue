@@ -1,7 +1,11 @@
 <script setup>
-import { computed, watch } from 'vue'
 import Navbar from './components/layout/Navbar.vue'
-import { createAppKit, useAppKitAccount } from '@reown/appkit/vue'
+
+/**
+ * Reowned appkit for vue to connect your wallet
+ * Whole setup below
+ */
+import { createAppKit } from '@reown/appkit/vue'
 import { arbitrum, mainnet, bsc, solana, base, polygon, bitcoin } from '@reown/appkit/networks'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 
@@ -35,9 +39,6 @@ const modal = createAppKit({
     analytics: true // Optional - defaults to your Cloud configuration
   }
 })
-// modal.open()
-
-
 </script>
 
 <template>
