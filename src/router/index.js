@@ -8,6 +8,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
+    },
+    {
+      path: '/news',
+      name: 'news',
+      component: () => import('@/views/NewsView.vue') // Lazy loading
     }
   ],
 })
