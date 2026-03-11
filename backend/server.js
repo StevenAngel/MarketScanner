@@ -8,6 +8,7 @@ const parser = new XMLParser();
 app.use(express.json())
 app.use(cors())
 
+// Endpoint to get rss feed from cointelegraph and sort data
 app.get('/rss', async (req, res) => {
     const feed = await fetch('https://cointelegraph.com/rss', {
         headers: {
@@ -20,8 +21,15 @@ app.get('/rss', async (req, res) => {
     const parsed = parser.parse(feed).rss.channel.item
     const news = []
     parsed.forEach(element => {
+        let categories = null
+        if (!Array.isArray(element.category)) {
+            categories = [element.category]
+        } else {
+            categories = element.category
+        }
+
         const imageUrl = element.description.split("src=")[1].match(/"(.*?)"/)[1]
-        news.push({ title: element.title, link: element.link, imageUrl })
+        news.push({ title: element.title, link: element.link, imageUrl, categories })
     });
     res.send(news)
 })
