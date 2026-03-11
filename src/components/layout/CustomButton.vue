@@ -3,9 +3,9 @@ const props = defineProps(['text'])
 </script>
 
 <template>
-    <div class="button">
+    <button class="button">
         <span>{{ props.text }}</span>
-    </div>
+    </button>
 </template>
 
 <style scoped>
@@ -16,6 +16,9 @@ const props = defineProps(['text'])
     cursor: pointer;
     width: fit-content;
     border-radius: .5rem;
+    font-size: inherit;
+    font-style: inherit;
+    color: inherit;
 }
 
 .button:hover {
