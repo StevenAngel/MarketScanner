@@ -18,7 +18,6 @@ import Logo from '../../assets/branding/logo.png'
     width: 100%;
     background-color: var(--bg-main);
     color: var(--text-primary);
-    padding: 0.1rem;
     /* position: sticky;
     top: 0; */
     z-index: 100;
