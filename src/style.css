@@ -21,8 +21,26 @@ body {
     background-color: var(--bg-main);
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
-    /* Falls du eine Krypto-Schriftart nutzt */
-    min-height: 100vh;
+    min-height: 100%;
     font-size: medium;
     font-weight: 600;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: center;
+}
+
+td,
+th {
+    padding: 1rem;
+}
+
+.tableFeed {
+    display: flex;
 }
