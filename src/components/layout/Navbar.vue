@@ -1,5 +1,6 @@
 <script setup>
 import Logo from '../../assets/branding/logo.png'
+import CustomButton from './CustomButton.vue';
 </script>
 
 <template>
@@ -8,7 +9,7 @@ import Logo from '../../assets/branding/logo.png'
             <img :src="Logo" class="logo" />
             <div class="navbarItem">Markets</div>
             <div class="navbarItem">News</div>
-            <div class="web3Login">Connect Wallet</div>
+            <CustomButton class="web3Login" text="Connect Wallet" />
         </div>
     </div>
 </template>
