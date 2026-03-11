@@ -11,8 +11,10 @@ const props = defineProps(['text'])
 <style scoped>
 .sortButton {
     background-color: var(--bg-surface);
-    padding: 1rem;
-    border-radius: 1rem;
+    padding: .5rem;
+    border-radius: .5rem;
+    width: fit-content;
+    cursor: pointer;
 }
 
 .sortButton:hover {
