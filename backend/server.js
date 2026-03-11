@@ -20,6 +20,7 @@ app.get('/rss', async (req, res) => {
     // Parse xml to json
     const parsed = parser.parse(feed).rss.channel.item
     const news = []
+    const allCategories = []
     parsed.forEach(element => {
         let categories = null
         if (!Array.isArray(element.category)) {
@@ -28,10 +29,13 @@ app.get('/rss', async (req, res) => {
             categories = element.category
         }
 
+        categories.forEach(cat => {
+            if (!allCategories.includes(cat)) allCategories.push(cat)
+        })
         const imageUrl = element.description.split("src=")[1].match(/"(.*?)"/)[1]
         news.push({ title: element.title, link: element.link, imageUrl, categories })
     });
-    res.send(news)
+    res.send({ news, allCategories })
 })
 
 app.listen('3000', () => {
