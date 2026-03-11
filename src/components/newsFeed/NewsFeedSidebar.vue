@@ -22,6 +22,6 @@ onMounted(loadFeed)
 <style scoped>
 .newsSidebar {
     flex: 0 0 auto;
-    margin: 2rem;
+    padding: 2rem;
 }
 </style>
