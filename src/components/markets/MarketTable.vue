@@ -237,7 +237,7 @@ onUnmounted(() => socket?.close())
 
 <style scoped>
 .container {
-  margin: 1rem;
+  padding: 1rem;
   flex: 1;
 }
 

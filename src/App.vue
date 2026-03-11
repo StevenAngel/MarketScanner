@@ -12,4 +12,8 @@ import NewsFeedSidebar from './components/newsFeed/NewsFeedSidebar.vue';
   </div>
 </template>
 
+<<<<<<< Updated upstream
 <style scoped></style>
+=======
+<style scoped></style>
+>>>>>>> Stashed changes
