@@ -15,11 +15,11 @@ const chains = [{
     name: "BSC",
     logo: "https://moralis.com/wp-content/uploads/2024/06/BNB-Logo.svg"
 },
-{
-    id: "sol",
-    name: "Solana",
-    logo: "https://moralis.com/wp-content/uploads/2022/12/Solana.svg"
-},
+// {
+//     id: "sol",
+//     name: "Solana",
+//     logo: "https://moralis.com/wp-content/uploads/2022/12/Solana.svg"
+// },
 {
     id: "arbitrum",
     name: "Arbitrum",

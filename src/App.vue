@@ -13,8 +13,8 @@ const projectId = '405b736f468ab2233b22a972db05ef72'
 
 // 2. Create a metadata object
 const metadata = {
-  name: 'AppKit',
-  description: 'AppKit Example',
+  name: 'Portfolio Viewer',
+  description: 'Shows portfolio in a pie chart',
   url: 'http://localhost:5173', // origin must match your domain & subdomain
   icons: ['https://avatars.githubusercontent.com/u/179229932']
 }

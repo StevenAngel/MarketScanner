@@ -107,7 +107,7 @@ watch(address, (newVal,) => {
         <VChart class="chart" :option="option" autoresize />
     </div>
     <div v-else>
-        <h1>Please Connect Your Wallet to View Your Portfolio</h1>
+        <h1 class="connectMessage">Please Connect Your Wallet to View Your Portfolio</h1>
     </div>
 </template>
 
@@ -119,11 +119,15 @@ watch(address, (newVal,) => {
 
 .chainSelector {
     position: relative;
-    top: 1rem;
-    left: 1rem;
+    margin: 1rem;
 }
 
 .chart {
     height: 100%;
+}
+
+.connectMessage {
+    margin: 1rem;
+    text-align: center;
 }
 </style>

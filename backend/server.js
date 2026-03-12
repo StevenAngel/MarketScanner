@@ -67,7 +67,9 @@ app.post('/portfolio', limiter, async (req, res) => {
         .then(res => res.json())
         .catch(err => console.error(err));
     tokenBalances.result.forEach(element => {
-        formattedResponse.push({ symbol: element.symbol, logo: element.logo, balance: element.balance_formatted, usdValue: element.usd_value, usdPrice: element.usd_price, portfolioPercent: element.portfolio_percentage })
+        if (Number(element.usd_value) > 0.01) {
+            formattedResponse.push({ symbol: element.symbol, logo: element.logo, balance: element.balance_formatted, usdValue: element.usd_value, usdPrice: element.usd_price, portfolioPercent: element.portfolio_percentage })
+        }
     })
     res.send(formattedResponse)
 })
