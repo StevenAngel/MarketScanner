@@ -2,18 +2,20 @@
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { PieChart } from "echarts/charts";
-import { TitleComponent, TooltipComponent, LegendComponent } from "echarts/components";
+import { TitleComponent, TooltipComponent, LegendComponent, GraphicComponent } from "echarts/components";
 import VChart from "vue-echarts";
 import { ref, computed, watch } from "vue";
 import ChainSelector from "@/components/portfolio/ChainSelector.vue";
 import { useAppKitAccount } from '@reown/appkit/vue'
 const appKitAccount = useAppKitAccount({ "namespace": "eip155" })
-const isConnected = computed(() => appKitAccount.value.isConnected)
-const address = computed(() => appKitAccount.value.address)
 const chartData = ref([])
 const currentChain = ref('Ethereum')
+const totalPortfolioValue = ref(0)
+const isConnected = computed(() => appKitAccount.value.isConnected)
+const address = computed(() => appKitAccount.value.address)
 const subtext = computed(() => "Your assets on " + currentChain.value)
-use([CanvasRenderer, PieChart, TitleComponent, TooltipComponent, LegendComponent]);
+const totalValue = computed(() => 'Total\n$' + totalPortfolioValue.value)
+use([CanvasRenderer, PieChart, TitleComponent, TooltipComponent, LegendComponent, GraphicComponent]);
 
 const option = ref({
     title: {
@@ -67,6 +69,20 @@ const option = ref({
             data: chartData
         },
     ],
+    graphic: [
+        {
+            type: 'text',
+            left: 'center',
+            top: 'center',
+            style: {
+                text: totalValue,
+                textAlign: 'center',
+                fill: '#fff',
+                fontSize: 20,
+                fontWeight: 'bold'
+            }
+        }
+    ]
 });
 
 const changeChain = async (val) => {
@@ -81,10 +97,12 @@ const changeChain = async (val) => {
         }).then(res => res.json())
         // { symbol: element.symbol, logo: element.logo, balance: element.balance_formatted, usdValue: element.usd_value, usdPrice: element.usd_price, portfolioPercent: element.portfolio_percentage }
         const data = []
+        let portfolioValue = 0
         walletData.forEach(element => {
+            portfolioValue += element.usdValue
             data.push({ value: element.usdValue, name: element.symbol })
         })
-
+        totalPortfolioValue.value = portfolioValue.toFixed(2)
         chartData.value = data
         currentChain.value = val.name
     }
