@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-const emit = defineEmits(['changeCain']);
+// define emit to pass data to the parent
+const emit = defineEmits(['changeChain']);
 const showDropdown = ref(false)
 
 // Selectable chains
@@ -20,12 +21,12 @@ const chains = [{
     logo: "https://moralis.com/wp-content/uploads/2022/12/Solana.svg"
 },
 {
-    id: "arb",
+    id: "arbitrum",
     name: "Arbitrum",
     logo: "https://moralis.com/wp-content/uploads/2025/01/Arbitrum-Logo.svg"
 },
 {
-    id: "pol",
+    id: "polygon",
     name: "Polygon",
     logo: "https://moralis.com/wp-content/uploads/2024/05/Polygon.svg"
 },
@@ -33,11 +34,6 @@ const chains = [{
     id: "base",
     name: "Base",
     logo: "https://moralis.com/wp-content/uploads/2022/12/Base-Logo-Blue.svg"
-},
-{
-    id: "btc",
-    name: "Bitcoin",
-    logo: "https://moralis.com/wp-content/uploads/2026/01/bitcoin-icon.svg"
 }]
 
 const selectedChain = ref(chains[0])
@@ -46,6 +42,8 @@ const selectChain = (value) => {
     if (!selectTimeout) {
         selectedChain.value = chains.find(obj => obj.id == value)
         showDropdown.value = !showDropdown.value
+        // Emit to pass data to parent
+        emit("changeChain", selectedChain.value)
         // Set timeout for ratelimit (1s like backend)
         selectTimeout = setTimeout(() => {
             selectTimeout = null
@@ -101,6 +99,7 @@ const toggleDropdown = () => {
     position: absolute;
     border: 1px solid var(--text-primary);
     border-radius: .5rem;
+    background-color: var(--bg-main);
 }
 
 .dropdownList {

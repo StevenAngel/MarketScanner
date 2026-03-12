@@ -3,17 +3,22 @@ import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { PieChart } from "echarts/charts";
 import { TitleComponent, TooltipComponent, LegendComponent } from "echarts/components";
-import VChart, { THEME_KEY } from "vue-echarts";
-import { ref } from "vue";
+import VChart from "vue-echarts";
+import { ref, computed, watch } from "vue";
 import ChainSelector from "@/components/portfolio/ChainSelector.vue";
-
+import { useAppKitAccount } from '@reown/appkit/vue'
+const appKitAccount = useAppKitAccount({ "namespace": "eip155" })
+const isConnected = computed(() => appKitAccount.value.isConnected)
+const address = computed(() => appKitAccount.value.address)
+const chartData = ref([])
+const currentChain = ref('Ethereum')
+const subtext = computed(() => "Your assets on " + currentChain.value)
 use([CanvasRenderer, PieChart, TitleComponent, TooltipComponent, LegendComponent]);
-
 
 const option = ref({
     title: {
         text: "Portfolio",
-        subtext: "Your assets on the xyz chain",
+        subtext: subtext,
         left: "center",
         textStyle: {
             color: "#ffffff",          // Ein sehr dunkles Grau (fast Schwarz) wirkt moderner als pures Schwarz
@@ -59,20 +64,50 @@ const option = ref({
                     shadowColor: 'rgba(0, 0, 0, 0.2)'
                 }
             },
-            data: [
-                { value: 1048, name: 'Search Engine' },
-                { value: 735, name: 'Direct' },
-                { value: 580, name: 'Email' }
-            ]
+            data: chartData
         },
     ],
 });
+
+const changeChain = async (val) => {
+    if (isConnected.value && address) {
+        const walletData = await fetch("http://localhost:3000/portfolio", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Das hier fehlt wahrscheinlich!
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ wallet: address.value, chain: val.id })
+        }).then(res => res.json())
+        // { symbol: element.symbol, logo: element.logo, balance: element.balance_formatted, usdValue: element.usd_value, usdPrice: element.usd_price, portfolioPercent: element.portfolio_percentage }
+        const data = []
+        walletData.forEach(element => {
+            data.push({ value: element.usdValue, name: element.symbol })
+        })
+
+        chartData.value = data
+        currentChain.value = val.name
+    }
+}
+
+// Load eth assets on wallet connected
+watch(address, (newVal,) => {
+    if (newVal) {
+        changeChain({ address: newVal, id: 'eth', name: 'Ethereum' })
+    }
+})
 </script>
 
 <template>
-    <div class="chartConatiner">
-        <ChainSelector />
+    <div v-if="isConnected" class="chartConatiner">
+        <div class="chainSelector">
+            <!-- changeChain is emitted by child to pass data -->
+            <ChainSelector @changeChain="changeChain" />
+        </div>
         <VChart class="chart" :option="option" autoresize />
+    </div>
+    <div v-else>
+        <h1>Please Connect Your Wallet to View Your Portfolio</h1>
     </div>
 </template>
 
@@ -80,6 +115,12 @@ const option = ref({
 .chartConatiner {
     width: 100%;
     height: 50rem;
+}
+
+.chainSelector {
+    position: relative;
+    top: 1rem;
+    left: 1rem;
 }
 
 .chart {
