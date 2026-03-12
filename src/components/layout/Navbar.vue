@@ -6,6 +6,7 @@ import WalletConnectButton from '../walletConnect/WalletConnectButton.vue';
 <template>
     <div class="navbar">
         <div class="innerNavbar">
+            <!-- router-link is vue element for <a> for loading new page without reloading whole site -->
             <router-link to="/" class="navbarItem"><img :src="Logo" class="logo" /></router-link>
             <router-link to="/news" class="navbarItem">News</router-link>
             <router-link to="/portfolio" class="navbarItem">Portfolio</router-link>
