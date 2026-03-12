@@ -20,7 +20,9 @@ const loadingOptions = {
 };
 
 // REFs
-const chartData = ref([])
+const pieChartData = ref([])
+const lineChartDataY = ref([])
+const lineChartDataX = ref([])
 const currentChain = ref('Ethereum')
 const totalPortfolioValue = ref(0)
 const isLoading = ref(true)
@@ -83,7 +85,7 @@ const pieChartOptions = ref({
                     shadowColor: 'rgba(0, 0, 0, 0.2)'
                 }
             },
-            data: chartData
+            data: pieChartData
         },
     ],
     graphic: [
@@ -132,7 +134,7 @@ const lineChartOptions = ref({
     xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: [1, 2, 3, 4],
+        data: lineChartDataX,
         axisLine: { lineStyle: { color: '#444' } }
     },
     yAxis: {
@@ -149,7 +151,7 @@ const lineChartOptions = ref({
             type: 'line',
             smooth: true, // Macht die Kurve "smooth" statt zackig
             showSymbol: false,
-            data: [1, 2, 3, 4],//props.historyData.map(d => d.price),
+            data: lineChartDataY,//props.historyData.map(d => d.price),
             lineStyle: {
                 width: 3,
                 color: '#6366f1' // Indigo
@@ -181,15 +183,26 @@ const changeChain = async (val) => {
             },
             body: JSON.stringify({ wallet: address.value, chain: val.id })
         }).then(res => res.json())
-        // { symbol: element.symbol, logo: element.logo, balance: element.balance_formatted, usdValue: element.usd_value, usdPrice: element.usd_price, portfolioPercent: element.portfolio_percentage }
         const data = []
         let portfolioValue = 0
+
+        // Set portfolio value and chartdata
         walletData.portfolio.forEach(element => {
             portfolioValue += element.usdValue
             data.push({ value: element.usdValue, name: element.symbol })
         })
+
+        // Clear lineChart data
+        lineChartDataX.value = []
+        lineChartDataY.value = []
+        // Set portfolio history
+        walletData.portfolioHistory.forEach(element => {
+            lineChartDataX.value.push(element.timestamp)
+            lineChartDataY.value.push(element.price)
+        })
+
         totalPortfolioValue.value = portfolioValue.toFixed(2)
-        chartData.value = data
+        pieChartData.value = data
         currentChain.value = val.name
         isLoading.value = false
     }
