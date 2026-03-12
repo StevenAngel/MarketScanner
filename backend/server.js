@@ -1,10 +1,22 @@
 import express from 'express'
 import { XMLParser } from 'fast-xml-parser'
 import cors from 'cors'
+import rateLimit from "express-rate-limit";
 import dotenv from 'dotenv'
 dotenv.config()
 const app = express()
 const parser = new XMLParser();
+const limiter = rateLimit({
+    windowMs: 1000, // 1 second
+    max: 1, // max 1 requests per IP
+    handler: (req, res) => {
+        res.status(429).json({
+            error: "RATE_LIMIT",
+            message: "Too many requests.",
+            retryAfter: Math.ceil(req.rateLimit.resetTime / 1000)
+        });
+    }
+});
 
 app.use(express.json())
 app.use(cors())
@@ -40,7 +52,7 @@ app.get('/rss', async (req, res) => {
 })
 
 // Endpoint to get portfolio from user, uses moralis for the data
-app.post('/portfolio', async (req, res) => {
+app.post('/portfolio', limiter, async (req, res) => {
     const formattedResponse = []
     const wallet = req.body.wallet
     const chain = req.body.chain
