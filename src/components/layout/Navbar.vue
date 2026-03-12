@@ -6,9 +6,9 @@ import WalletConnectButton from '../walletConnect/WalletConnectButton.vue';
 <template>
     <div class="navbar">
         <div class="innerNavbar">
-            <img :src="Logo" class="logo" />
-            <div class="navbarItem">Markets</div>
-            <div class="navbarItem">News</div>
+            <router-link to="/" class="navbarItem"><img :src="Logo" class="logo" /></router-link>
+            <router-link to="/news" class="navbarItem">News</router-link>
+            <router-link to="/portfolio" class="navbarItem">Portfolio</router-link>
             <WalletConnectButton class="web3Login" />
         </div>
     </div>
@@ -31,6 +31,15 @@ import WalletConnectButton from '../walletConnect/WalletConnectButton.vue';
     margin: 1rem;
     align-items: center;
     font-size: 1.5rem;
+}
+
+.navbarItem {
+    text-decoration: none;
+    color: inherit;
+}
+
+.navbarItem:visited {
+    color: inherit;
 }
 
 .logo {
