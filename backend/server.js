@@ -110,7 +110,7 @@ async function getPortfolio(wallet, chain) {
 // Get history from all tokens in users wallet using mobula api
 async function getPortfolioHistory(tokens, chain) {
     const mobulaChain = moralisMobulaChain[chain]
-    const from = Date.now() - (365 * 24 * 60 * 60 * 1000) // 1 year in past
+    const from = Date.now() - (365 * 2 * 24 * 60 * 60 * 1000) // 1 year in past
     // Map request history + token data for each token
     const tokensHistory = tokens.map(async (element) => {
         const requestUrl = `https://api.mobula.io/api/1/market/history?asset=${element.address}&blockchain=${mobulaChain}&period=1d&from=${from}`

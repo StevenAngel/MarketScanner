@@ -106,7 +106,7 @@ const pieChartOptions = ref({
 
 const lineChartOptions = ref({
     title: {
-        text: "Portfolio Performance Last 365 Days",
+        text: "Portfolio Performance Last 2 Years",
         left: "center",
         textStyle: {
             color: "#ffffff",          // Ein sehr dunkles Grau (fast Schwarz) wirkt moderner als pures Schwarz
