@@ -78,8 +78,8 @@ app.post('/portfolio', limiter, async (req, res) => {
     const wallet = req.body.wallet
     const chain = req.body.chain
     const portfolio = await getPortfolio(wallet, chain)
-    await getPortfolioHistory(portfolio, chain)
-    res.send(portfolio)
+    const portfolioWithHistory = await getPortfolioHistory(portfolio, chain)
+    res.send(portfolioWithHistory)
 })
 
 app.listen('3000', () => {
@@ -111,6 +111,7 @@ async function getPortfolio(wallet, chain) {
 async function getPortfolioHistory(tokens, chain) {
     const mobulaChain = moralisMobulaChain[chain]
     const from = Date.now() - (365 * 24 * 60 * 60 * 1000) // 1 year in past
+    // Map request history + token data for each token
     const tokensHistory = tokens.map(async (element) => {
         const requestUrl = `https://api.mobula.io/api/1/market/history?asset=${element.address}&blockchain=${mobulaChain}&period=1d&from=${from}`
         const tokenHistory = await fetch(requestUrl, {
@@ -123,8 +124,8 @@ async function getPortfolioHistory(tokens, chain) {
         return { ...element, history: tokenHistory.data.price_history }
     })
 
-    console.log(await Promise.all(tokensHistory))
-
-    // const resolved = await Promise.all(promises)
-    // console.log(resolved)
+    const tokensWithHistory = await Promise.all(tokensHistory)
+    // console.log(tokensWithHistory[0].history)
+    // console.log(tokensWithHistory[1].history)
+    return tokensWithHistory
 }
