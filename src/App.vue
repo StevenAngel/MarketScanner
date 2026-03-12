@@ -6,7 +6,7 @@ import Navbar from './components/layout/Navbar.vue'
  * Whole setup below
  */
 import { createAppKit } from '@reown/appkit/vue'
-import { arbitrum, mainnet, bsc, solana, base, polygon, bitcoin, bscTestnet } from '@reown/appkit/networks'
+import { arbitrum, mainnet, bsc, solana, base, polygon, bitcoin } from '@reown/appkit/networks'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 // 1. Get projectId from https://dashboard.reown.com
 const projectId = '405b736f468ab2233b22a972db05ef72'
@@ -20,7 +20,7 @@ const metadata = {
 }
 
 // 3. Set the networks
-const networks = [mainnet, bsc, arbitrum, solana, base, polygon, bitcoin, bscTestnet]
+const networks = [mainnet, bsc, arbitrum, solana, base, polygon, bitcoin]
 
 // 4. Create Wagmi Adapter
 const wagmiAdapter = new WagmiAdapter({

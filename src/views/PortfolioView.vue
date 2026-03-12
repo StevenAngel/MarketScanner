@@ -5,6 +5,7 @@ import { PieChart } from "echarts/charts";
 import { TitleComponent, TooltipComponent, LegendComponent } from "echarts/components";
 import VChart, { THEME_KEY } from "vue-echarts";
 import { ref } from "vue";
+import ChainSelector from "@/components/portfolio/ChainSelector.vue";
 
 use([CanvasRenderer, PieChart, TitleComponent, TooltipComponent, LegendComponent]);
 
@@ -70,6 +71,7 @@ const option = ref({
 
 <template>
     <div class="chartConatiner">
+        <ChainSelector />
         <VChart class="chart" :option="option" autoresize />
     </div>
 </template>
