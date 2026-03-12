@@ -184,7 +184,7 @@ const changeChain = async (val) => {
         // { symbol: element.symbol, logo: element.logo, balance: element.balance_formatted, usdValue: element.usd_value, usdPrice: element.usd_price, portfolioPercent: element.portfolio_percentage }
         const data = []
         let portfolioValue = 0
-        walletData.forEach(element => {
+        walletData.portfolio.forEach(element => {
             portfolioValue += element.usdValue
             data.push({ value: element.usdValue, name: element.symbol })
         })

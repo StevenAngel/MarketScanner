@@ -78,8 +78,8 @@ app.post('/portfolio', limiter, async (req, res) => {
     const wallet = req.body.wallet
     const chain = req.body.chain
     const portfolio = await getPortfolio(wallet, chain)
-    const portfolioWithHistory = await getPortfolioHistory(portfolio, chain)
-    res.send(portfolioWithHistory)
+    const portfolioHistory = await getPortfolioHistory(portfolio, chain)
+    res.send({ portfolio, portfolioHistory })
 })
 
 app.listen('3000', () => {
@@ -125,7 +125,27 @@ async function getPortfolioHistory(tokens, chain) {
     })
 
     const tokensWithHistory = await Promise.all(tokensHistory)
-    // console.log(tokensWithHistory[0].history)
-    // console.log(tokensWithHistory[1].history)
-    return tokensWithHistory
+    const protfolioHistory = transformPortfolioHistory(tokensWithHistory)
+    return protfolioHistory
+}
+
+/**
+ * Transform the portfolio history. In goes each token with its own balance, history, value, etc.
+ * Out: calculated all tokens balance*price to specific time in history. Format: [time, porfolioValueOfAllTokens]
+ */
+function transformPortfolioHistory(tokens) {
+    const timeMap = {}
+    tokens.forEach(token => {
+        const tokenBalance = Number(token.balance)
+        // historyElement == [time, price]
+        token.history.forEach(historyElement => {
+            if (!timeMap[historyElement[0]]) timeMap[historyElement[0]] = 0
+            timeMap[historyElement[0]] += tokenBalance * historyElement[1]
+        })
+    })
+    const protfolioHistory = Object.entries(timeMap).map(([ts, price]) => {
+        const timestamp = new Date(Number(ts)).toLocaleDateString()
+        return { timestamp, price }
+    })
+    return protfolioHistory
 }
