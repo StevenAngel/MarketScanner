@@ -20,7 +20,6 @@ body {
     font-family: 'Monaco', Sans-serif;
     background-color: var(--bg-main);
     color: var(--text-primary);
-    font-family: 'Inter', sans-serif;
     min-height: 100%;
     font-size: medium;
     font-weight: 600;

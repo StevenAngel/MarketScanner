@@ -20,12 +20,14 @@
     "@wagmi/vue": "^0.5.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
+    "echarts": "^6.0.0",
     "express": "^5.2.1",
     "express-rate-limit": "^8.3.1",
     "fast-xml-parser": "^5.4.2",
     "simple-xml-to-json": "^1.2.3",
     "viem": "^2.47.1",
     "vue": "^3.5.29",
+    "vue-echarts": "^8.0.1",
     "vue-router": "^5.0.3"
   },
   "devDependencies": {
