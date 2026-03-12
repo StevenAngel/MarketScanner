@@ -20,7 +20,7 @@ watch(isConnected, (newValue, oldValue) => {
  * Opening the modal can connect to the wallet, if not connected yet
  * If connected: Change network/wallet, send crypto, disconnect
  */
-const openModal = () => {
+const openModal = async () => {
     modal.open()
 }
 </script>
