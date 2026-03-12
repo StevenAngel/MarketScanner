@@ -87,7 +87,6 @@ app.listen('3000', () => {
 })
 
 async function getPortfolio(wallet, chain) {
-    const formattedResponse = []
     const options = {
         method: 'GET',
         headers: {
@@ -98,10 +97,9 @@ async function getPortfolio(wallet, chain) {
     const tokenBalances = await fetch(`https://deep-index.moralis.io/api/v2.2/wallets/${wallet}/tokens?chain=${chain}&exclude_spam=true&max_token_inactivity=30&min_pair_side_liquidity_usd=1`, options)
         .then(res => res.json())
         .catch(err => console.error(err));
-    tokenBalances.result.forEach(element => {
-        if (Number(element.usd_value) > 0.01) {
-            formattedResponse.push({ symbol: element.symbol, logo: element.logo, balance: element.balance_formatted, usdValue: element.usd_value, usdPrice: element.usd_price, portfolioPercent: element.portfolio_percentage, address: element.token_address })
-        }
+
+    const formattedResponse = tokenBalances.result.filter(token => token.usd_value > 0.01).map(element => {
+        return { symbol: element.symbol, logo: element.logo, balance: element.balance_formatted, usdValue: element.usd_value, usdPrice: element.usd_price, portfolioPercent: element.portfolio_percentage, address: element.token_address }
     })
 
     return formattedResponse
