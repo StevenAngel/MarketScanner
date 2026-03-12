@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue';
-const buttonText = ref('Select Chain')
+const emit = defineEmits(['changeCain']);
 const showDropdown = ref(false)
+
+// Selectable chains
 const chains = [{
     id: "eth",
     name: "Ethereum",
@@ -39,11 +41,16 @@ const chains = [{
 }]
 
 const selectedChain = ref(chains[0])
-
+let selectTimeout = null
 const selectChain = (value) => {
-    selectedChain.value = chains.find(obj => obj.id == value)
-    buttonText.value = value
-    showDropdown.value = !showDropdown.value
+    if (!selectTimeout) {
+        selectedChain.value = chains.find(obj => obj.id == value)
+        showDropdown.value = !showDropdown.value
+        // Set timeout for ratelimit (1s like backend)
+        selectTimeout = setTimeout(() => {
+            selectTimeout = null
+        }, 1000)
+    }
 }
 
 const toggleDropdown = () => {
