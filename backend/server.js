@@ -3,7 +3,6 @@ import { XMLParser } from 'fast-xml-parser'
 import cors from 'cors'
 import rateLimit from "express-rate-limit";
 import dotenv from 'dotenv'
-dotenv.config()
 const app = express()
 const parser = new XMLParser();
 const limiter = rateLimit({
@@ -18,8 +17,31 @@ const limiter = rateLimit({
     }
 });
 
+const moralisMobulaChain = {
+    eth: "ethereum",
+    bsc: "bsc",
+    arbitrum: "arbitrum",
+    polygon: "polygon",
+    base: "base"
+}
+
+dotenv.config()
 app.use(express.json())
 app.use(cors())
+
+app.get('/test', async (req, res) => {
+    const response = await fetch(
+        `https://deep-index.moralis.io/api/v2.2/erc20/0x6D6bA21E4C4b29CA7Bfa1c344Ba1E35B8DaE7205/price/history?chain=bsc&interval=4h&to_block=13687456&limit=50`,
+        {
+            headers: {
+                'X-API-Key': process.env.MORALIS_API_KEY,
+                'accept': 'application/json'
+            }
+        }
+    );
+
+    console.log(response)
+})
 
 // Endpoint to get rss feed from cointelegraph and sort data
 app.get('/rss', async (req, res) => {
@@ -53,9 +75,19 @@ app.get('/rss', async (req, res) => {
 
 // Endpoint to get portfolio from user, uses moralis for the data
 app.post('/portfolio', limiter, async (req, res) => {
-    const formattedResponse = []
     const wallet = req.body.wallet
     const chain = req.body.chain
+    const portfolio = await getPortfolio(wallet, chain)
+    await getPortfolioHistory(portfolio, chain)
+    res.send(portfolio)
+})
+
+app.listen('3000', () => {
+    console.log('Running on http://localhost:3000')
+})
+
+async function getPortfolio(wallet, chain) {
+    const formattedResponse = []
     const options = {
         method: 'GET',
         headers: {
@@ -68,12 +100,31 @@ app.post('/portfolio', limiter, async (req, res) => {
         .catch(err => console.error(err));
     tokenBalances.result.forEach(element => {
         if (Number(element.usd_value) > 0.01) {
-            formattedResponse.push({ symbol: element.symbol, logo: element.logo, balance: element.balance_formatted, usdValue: element.usd_value, usdPrice: element.usd_price, portfolioPercent: element.portfolio_percentage })
+            formattedResponse.push({ symbol: element.symbol, logo: element.logo, balance: element.balance_formatted, usdValue: element.usd_value, usdPrice: element.usd_price, portfolioPercent: element.portfolio_percentage, address: element.token_address })
         }
     })
-    res.send(formattedResponse)
-})
 
-app.listen('3000', () => {
-    console.log('Running on http://localhost:3000')
-})
+    return formattedResponse
+}
+
+// Get history from all tokens in users wallet using mobula api
+async function getPortfolioHistory(tokens, chain) {
+    const mobulaChain = moralisMobulaChain[chain]
+    const from = Date.now() - (365 * 24 * 60 * 60 * 1000) // 1 year in past
+    const tokensHistory = tokens.map(async (element) => {
+        const requestUrl = `https://api.mobula.io/api/1/market/history?asset=${element.address}&blockchain=${mobulaChain}&period=1d&from=${from}`
+        const tokenHistory = await fetch(requestUrl, {
+            method: 'GET',
+            headers: {
+                "Authorization": process.env.MOBULA_API_KEY
+            }
+        }).then(res => res.json()).catch(err => console.error(err));
+
+        return { ...element, history: tokenHistory.data.price_history }
+    })
+
+    console.log(await Promise.all(tokensHistory))
+
+    // const resolved = await Promise.all(promises)
+    // console.log(resolved)
+}
