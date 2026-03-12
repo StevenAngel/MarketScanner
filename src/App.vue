@@ -43,6 +43,9 @@ const modal = createAppKit({
 
 <template>
   <Navbar />
+  <!-- v-slot extracts current component vue wants to render as variable -->
+  <!-- keep-alive does not rerender the included page (or all pages if none included) if it was rendered once -->
+  <!-- <component> is a placeholder for a dynamic component, ":is" tells the dynamic component to take our variable that we extracted and render it here  -->
   <router-view v-slot="{ Component }">
     <keep-alive include="PortfolioView">
       <component :is="Component" />
