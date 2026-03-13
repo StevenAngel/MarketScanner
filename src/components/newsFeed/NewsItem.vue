@@ -37,21 +37,22 @@ const openNewsLink = () => {
     background-color: var(--border-subtle);
 }
 
-/* .newsItem:first-child {
+
+/* Die Hero-Card ganz am Anfang */
+.newsItem:first-child {
     grid-column: span 2;
-    grid-row: span 2;
 }
 
-*/
-/* .newsItem:first-child img {
-    height: fit-content
-} */
-
-.newsItem:nth-child(5n) {
+/* Spezifisch das 2. Item */
+.newsItem:nth-child(2) {
     grid-column: span 2;
-    /* grid-row: span 2; */
-
 }
+
+/* Ab der 7. Card jede 5. */
+.newsItem:nth-child(5n + 7) {
+    grid-column: span 2;
+}
+
 
 .newsItem img {
     width: 100%;
