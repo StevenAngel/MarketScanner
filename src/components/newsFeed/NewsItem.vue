@@ -7,7 +7,7 @@ const openNewsLink = () => {
 </script>
 
 <template>
-    <div class="newsItem" @click="openNewsLink()">
+    <div class="item" @click="openNewsLink()">
         <img :src="props.imgSrc" />
         <div>
             <p class="itemText">{{ props.text }}</p>
@@ -21,7 +21,7 @@ const openNewsLink = () => {
 </template>
 
 <style scoped>
-.newsItem img {
+.item img {
     width: 100%;
     /* flex-grow = bild streched die height, damit die card, falls sie leer erscheinen würde voll ist mit dem bild */
     /* flex-grow: 1; */
@@ -49,7 +49,8 @@ const openNewsLink = () => {
 
 .itemInfos {
     /* Schiebt Autor/Datum nach ganz unten */
-    margin: auto 10px 5px 10px;
+    margin-top: auto;
+    padding: 0 10px 5px 10px;
     display: flex;
     justify-content: space-between;
 }
