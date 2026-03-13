@@ -29,20 +29,6 @@ dotenv.config()
 app.use(express.json())
 app.use(cors())
 
-app.get('/test', async (req, res) => {
-    const response = await fetch(
-        `https://deep-index.moralis.io/api/v2.2/erc20/0x6D6bA21E4C4b29CA7Bfa1c344Ba1E35B8DaE7205/price/history?chain=bsc&interval=4h&to_block=13687456&limit=50`,
-        {
-            headers: {
-                'X-API-Key': process.env.MORALIS_API_KEY,
-                'accept': 'application/json'
-            }
-        }
-    );
-
-    console.log(response)
-})
-
 // Endpoint to get rss feed from cointelegraph and sort data
 app.get('/rss', async (req, res) => {
     const feed = await fetch('https://cointelegraph.com/rss', {
