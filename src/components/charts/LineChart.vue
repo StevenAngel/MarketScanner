@@ -1,19 +1,19 @@
 <script setup>
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
-import { PieChart, LineChart } from "echarts/charts";
-import { TitleComponent, TooltipComponent, LegendComponent, GraphicComponent, GridComponent } from "echarts/components";
+import { LineChart } from "echarts/charts";
+import { GridComponent } from "echarts/components";
 import VChart from "vue-echarts";
 import { computed } from "vue";
 const props = defineProps(['lineChartDataX', 'lineChartDataY', 'isLoading', 'loadingOptions'])
-use([CanvasRenderer, PieChart, LineChart, TitleComponent, TooltipComponent, LegendComponent, GraphicComponent, GridComponent]);
+use([CanvasRenderer, LineChart, GridComponent]);
 
 const lineChartOptions = computed(() => ({
     title: {
         text: "Portfolio Performance Last 2 Years",
         left: "center",
         textStyle: {
-            color: "#ffffff",          // Ein sehr dunkles Grau (fast Schwarz) wirkt moderner als pures Schwarz
+            color: "#ffffff",
             fontSize: 24,              // Etwas größer
             fontWeight: 600,           // Schön fett (Bold)
             fontFamily: "Monaco, sans-serif", // Nutze eine moderne Sans-Serif
