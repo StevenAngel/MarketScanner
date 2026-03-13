@@ -5,7 +5,7 @@ import CustomButton from '../layout/CustomButton.vue'
 let socket = null
 const sortConfig = ref({})
 const showMoreTokens = ref(false) // Subscribe / unsubscribe websocket on toggle
-const showMoreButtonText = ref('SHOW MORE')
+const showMoreButtonText = ref('SHOW TOP 200')
 const markets = ref({
   // BTC: { price: '5000', change24hPercent: '-2%', change24h: '-1000', volumeCoin: '1', volumeUSD: '1' },
 })
@@ -103,10 +103,10 @@ const connect = () => {
 const showMore = () => {
   showMoreTokens.value = !showMoreTokens.value
   if (showMoreTokens.value) {
-    showMoreButtonText.value = "SHOW LESS"
+    showMoreButtonText.value = "SHOW TOP 100"
     markets.value = { ...internalMarkets }
   } else {
-    showMoreButtonText.value = "SHOW MORE"
+    showMoreButtonText.value = "SHOW TOP 200"
     markets.value = Object.fromEntries(Object.entries(internalMarkets).slice(0, 100))
   }
 }
