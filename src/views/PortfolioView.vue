@@ -1,14 +1,12 @@
 <script setup>
-import { use } from "echarts/core";
-import { CanvasRenderer } from "echarts/renderers";
-import { PieChart, LineChart } from "echarts/charts";
-import { TitleComponent, TooltipComponent, LegendComponent, GraphicComponent, GridComponent } from "echarts/components";
-import VChart from "vue-echarts";
-import { ref, computed, watch } from "vue";
-import ChainSelector from "@/components/portfolio/ChainSelector.vue";
 import { useAppKitAccount } from '@reown/appkit/vue'
+import { ref, computed, watch } from "vue"
+import PieChart from "@/components/charts/PieChart.vue"
+import LineChart from "@/components/charts/LineChart.vue"
+import ChainSelector from "@/components/portfolio/ChainSelector.vue"
 const appKitAccount = useAppKitAccount({ "namespace": "eip155" })
 
+// Chart loading style
 const loadingOptions = {
     text: 'Loading...',
     color: '#6366f1',
@@ -33,147 +31,11 @@ const address = computed(() => appKitAccount.value.address)
 const subtext = computed(() => "Your assets on " + currentChain.value)
 const totalValue = computed(() => 'Total\n$' + totalPortfolioValue.value)
 
-use([CanvasRenderer, PieChart, LineChart, TitleComponent, TooltipComponent, LegendComponent, GraphicComponent, GridComponent]);
-
-// PIECHART Options
-const pieChartOptions = ref({
-    title: {
-        text: "Portfolio",
-        subtext: subtext,
-        left: "center",
-        textStyle: {
-            color: "#ffffff",          // Ein sehr dunkles Grau (fast Schwarz) wirkt moderner als pures Schwarz
-            fontSize: 24,              // Etwas größer
-            fontWeight: 600,           // Schön fett (Bold)
-            fontFamily: "Monaco, sans-serif", // Nutze eine moderne Sans-Serif
-            lineHeight: 30
-        },
-
-        // Styling für den Untertitel
-        subtextStyle: {
-            color: "#6b7280",          // Ein dezentes Grau (Slate-Gray)
-            fontSize: 14,
-            fontWeight: 400,
-            fontFamily: "Monaco, sans-serif",
-        },
-    },
-    tooltip: { trigger: 'item', backgroundColor: 'rgba(255, 255, 255, 0.9)', },
-    series: [
-        {
-            type: 'pie',
-            radius: ['40%', '70%'], // Erzeugt den modernen Ring-Look
-            avoidLabelOverlap: false,
-            itemStyle: {
-                borderRadius: 10, // Abgerundete Ecken für den modernen Look
-                borderColor: '#fff',
-                borderWidth: 2,
-            },
-            label: {
-                show: true,
-                fontSize: '18',
-                color: 'rgba(255, 255, 255, 1)'
-            },
-            emphasis: {
-                label: {
-                    show: true,
-                    fontSize: '18',
-                    fontWeight: 'bold',
-                    formatter: '{b}\n{d}%' // Zeigt Name & Prozent in der Mitte an
-                },
-                itemStyle: {
-                    shadowBlur: 20,
-                    shadowColor: 'rgba(0, 0, 0, 0.2)'
-                }
-            },
-            data: pieChartData
-        },
-    ],
-    graphic: [
-        {
-            type: 'text',
-            left: 'center',
-            top: 'center',
-            style: {
-                text: totalValue,
-                textAlign: 'center',
-                fill: '#fff',
-                fontSize: 20,
-                fontWeight: 'bold'
-            }
-        }
-    ]
-});
-
-const lineChartOptions = ref({
-    title: {
-        text: "Portfolio Performance Last 2 Years",
-        left: "center",
-        textStyle: {
-            color: "#ffffff",          // Ein sehr dunkles Grau (fast Schwarz) wirkt moderner als pures Schwarz
-            fontSize: 24,              // Etwas größer
-            fontWeight: 600,           // Schön fett (Bold)
-            fontFamily: "Monaco, sans-serif", // Nutze eine moderne Sans-Serif
-            lineHeight: 30
-        },
-    },
-    tooltip: {
-        trigger: 'axis',
-        backgroundColor: '#1f2937',
-        textStyle: { color: '#fff' },
-        formatter: (params) => {
-            const data = params[0];
-            return `${data.name}<br/><b>$${data.value.toLocaleString()}</b>`;
-        }
-    },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
-    xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: lineChartDataX,
-        axisLine: { lineStyle: { color: '#444' } }
-    },
-    yAxis: {
-        type: 'value',
-        scale: true, // Startet nicht bei 0, besser für Krypto-Preise
-        axisLabel: {
-            formatter: (val) => `$${val}`
-        },
-        splitLine: { lineStyle: { color: '#222' } }
-    },
-    series: [
-        {
-            name: 'Price',
-            type: 'line',
-            smooth: true, // Macht die Kurve "smooth" statt zackig
-            showSymbol: false,
-            data: lineChartDataY,//props.historyData.map(d => d.price),
-            lineStyle: {
-                width: 3,
-                color: '#6366f1' // Indigo
-            },
-            // Area Style für den coolen Glow-Effekt unter der Linie
-            areaStyle: {
-                color: {
-                    type: 'linear',
-                    x: 0, y: 0, x2: 0, y2: 1,
-                    colorStops: [
-                        { offset: 0, color: 'rgba(99, 102, 241, 0.4)' },
-                        { offset: 1, color: 'rgba(99, 102, 241, 0)' }
-                    ]
-                }
-            }
-        }
-    ]
-});
-
 // Change chain on chainSelector click, fetches portfolio for new chain and changes ref values to load new charts
 const changeChain = async (val) => {
     if (isConnected.value && address) {
+        console.log(isConnected.value, address.value)
+
         isLoading.value = true
         const walletData = await fetch("http://localhost:3000/portfolio", {
             method: 'POST',
@@ -183,6 +45,8 @@ const changeChain = async (val) => {
             },
             body: JSON.stringify({ wallet: address.value, chain: val.id })
         }).then(res => res.json())
+        console.log(walletData)
+
         const data = []
         let portfolioValue = 0
 
@@ -217,17 +81,16 @@ watch(address, (newVal,) => {
 </script>
 
 <template>
-    <div v-if="isConnected" class="chartConatiner">
+    <div v-if="isConnected">
         <div class="chainSelector">
             <!-- changeChain is emitted by child to pass data -->
             <ChainSelector @changeChain="changeChain" />
         </div>
         <div class="charts">
-
-            <VChart class="chart" :option="pieChartOptions" :loading="isLoading" :loading-options="loadingOptions"
-                autoresize />
-            <VChart class="chart" :option="lineChartOptions" :loading="isLoading" :loading-options="loadingOptions"
-                autoresize />
+            <PieChart class="chart" :chartData="pieChartData" :chartSubtext="subtext" :chartTotalValue="totalValue"
+                :isLoading="isLoading" :loadingOptions="loadingOptions" />
+            <LineChart class="chart" :lineChartDataX="lineChartDataX" :lineChartDataY="lineChartDataY"
+                :loading="isLoading" :loading-options="loadingOptions" />
 
         </div>
     </div>
@@ -237,13 +100,8 @@ watch(address, (newVal,) => {
 </template>
 
 <style scoped>
-.chartConatiner {
-    width: 100%;
-    height: 50rem;
-}
-
 .charts {
-    width: 100%;
+    width: 99%;
     height: 50rem;
     display: flex;
 }
