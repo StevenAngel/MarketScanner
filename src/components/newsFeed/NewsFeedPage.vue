@@ -62,6 +62,7 @@ onMounted(loadFeed)
         minmax: minimal 20rem pro spalte, max 1fr = wenn platz übrig ist (z.b. container = 50rem) pro spalte aber nur 20rem belegt, teilen sich die 2 spalten den restplatz und werden 25rem pro spalte
     */
     grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    /* Width 90rem, damit nur 4 karten angezeigt werden pro column */
     width: 90rem;
     /* Alle Karten in einer Zeile werden gleich hoch */
     align-items: stretch;
@@ -72,12 +73,17 @@ onMounted(loadFeed)
 }
 
 .categories {
+    position: sticky;
+    top: 1rem;
     margin-top: 1rem;
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    justify-content: center;
-    margin: 1rem;
+    width: fit-content;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.295);
+    border-radius: 1rem;
+    margin: auto;
 }
 
 .highlighted {
