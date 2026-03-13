@@ -57,6 +57,8 @@ onMounted(loadFeed)
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+    justify-content: center;
+    margin: 1rem;
 }
 
 .categories {
@@ -64,6 +66,8 @@ onMounted(loadFeed)
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+    justify-content: center;
+    margin: 1rem;
 }
 
 .highlighted {

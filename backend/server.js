@@ -1,10 +1,10 @@
 import express from 'express'
-import { XMLParser } from 'fast-xml-parser'
+import Parser from 'rss-parser';
 import cors from 'cors'
 import rateLimit from "express-rate-limit";
 import dotenv from 'dotenv'
 const app = express()
-const parser = new XMLParser();
+const parser = new Parser();
 const limiter = rateLimit({
     windowMs: 1000, // 1 second
     max: 1, // max 1 requests per IP
@@ -31,32 +31,60 @@ app.use(cors())
 
 // Endpoint to get rss feed from cointelegraph and sort data
 app.get('/rss', async (req, res) => {
-    const feed = await fetch('https://cointelegraph.com/rss', {
-        headers: {
-            // Gängiger User-Agent String für Chrome
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8'
-        }
-    }).then(res => res.text()).catch(err => console.error(err))
+    // const feed = await fetch('https://cointelegraph.com/rss', {
+    //     headers: {
+    //         // Gängiger User-Agent String für Chrome
+    //         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    //         'Accept': 'application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8'
+    //     }
+    // }).then(res => res.text()).catch(err => console.error(err))
+    // // Parse xml to json
+    // const parsed = parser.parse(feed).rss.channel.item
+    // const news = []
+    // const allCategories = new Set([])
+    // parsed.forEach(element => {
+    //     let categories = null
+    //     if (!Array.isArray(element.category)) {
+    //         categories = [element.category]
+    //     } else {
+    //         categories = element.category
+    //     }
+
+    //     categories.forEach(cat => allCategories.add(cat))
+    //     const imageUrl = element.description.split("src=")[1].match(/"(.*?)"/)[1]
+    //     news.push({ title: element.title, link: element.link, imageUrl, categories })
+    // });
+    // res.send({ news, allCategories: Array.from(allCategories) })
+
+    // const feed = await fetch('https://decrypt.co/feed', {
+    //     headers: {
+    //         // Gängiger User-Agent String für Chrome
+    //         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    //         'Accept': 'application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8'
+    //     }
+    // }).then(res => res.text()).catch(err => console.error(err))
     // Parse xml to json
-    const parsed = parser.parse(feed).rss.channel.item
+    const parsed = await parser.parseURL("https://decrypt.co/feed")
     const news = []
-    const allCategories = []
-    parsed.forEach(element => {
+    const allCategories = new Set([])
+    parsed.items.forEach(element => {
         let categories = null
-        if (!Array.isArray(element.category)) {
-            categories = [element.category]
+        if (!Array.isArray(element.categories)) {
+            if (element.categories != '') categories = [element.categories]
         } else {
-            categories = element.category
+            const internalCategories = []
+            element.categories.forEach(element => {
+                if (element != '') internalCategories.push(element)
+            });
+            categories = internalCategories
         }
 
-        categories.forEach(cat => {
-            if (!allCategories.includes(cat)) allCategories.push(cat)
-        })
-        const imageUrl = element.description.split("src=")[1].match(/"(.*?)"/)[1]
-        news.push({ title: element.title, link: element.link, imageUrl, categories })
+        categories.forEach(cat => allCategories.add(cat))
+        const imageUrl = element.enclosure.url
+        console.log(element)
+        news.push({ title: element.title, link: element.link, categories, imageUrl, author: element.creator, date: element.isoDate, content: element.contentSnippet })
     });
-    res.send({ news, allCategories })
+    res.send({ news, allCategories: Array.from(allCategories) })
 })
 
 // Endpoint to get portfolio from user, uses moralis for the data

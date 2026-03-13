@@ -23,7 +23,7 @@
     "echarts": "^6.0.0",
     "express": "^5.2.1",
     "express-rate-limit": "^8.3.1",
-    "fast-xml-parser": "^5.4.2",
+    "rss-parser": "^3.13.0",
     "simple-xml-to-json": "^1.2.3",
     "viem": "^2.47.1",
     "vue": "^3.5.29",
