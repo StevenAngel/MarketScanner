@@ -8,11 +8,10 @@ const openNewsLink = () => {
 
 <template>
     <div class="newsItem" @click="openNewsLink()">
+        <img :src="props.imgSrc" />
         <div>
-            <img :src="props.imgSrc" />
             <p class="itemText">{{ props.text }}</p>
             <p class="preview">{{ props.content }}</p>
-
         </div>
         <div class="itemInfos">
             <span class="subtext">{{ props.author }}</span>
@@ -24,8 +23,8 @@ const openNewsLink = () => {
 <style scoped>
 .newsItem {
     background-color: var(--bg-surface);
+    /* Wichtig für das Stretch-Verhalten, damit alle cards gleich hoch werden */
     height: 100%;
-    /* Wichtig für das Stretch-Verhalten */
     border-radius: 1rem;
     margin-top: 1rem;
     cursor: pointer;
@@ -38,13 +37,28 @@ const openNewsLink = () => {
     background-color: var(--border-subtle);
 }
 
-.newsItem:first-child {
+/* .newsItem:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+*/
+/* .newsItem:first-child img {
+    height: fit-content
+} */
+
+.newsItem:nth-child(5n) {
     grid-column: span 2;
     /* grid-row: span 2; */
+
 }
 
 .newsItem img {
     width: 100%;
+    /* flex-grow = bild streched die height, damit die card, falls sie leer erscheinen würde voll ist mit dem bild */
+    /* flex-grow: 1; */
+    height: 300px;
+    min-height: 0;
     /* Verhindert Verzerrung */
     object-fit: cover;
     border-top-left-radius: 1rem;
