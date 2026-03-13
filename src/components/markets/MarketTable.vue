@@ -1,9 +1,11 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import MarketTableRow from './MarketTableRow.vue'
-
+import CustomButton from '../layout/CustomButton.vue'
 let socket = null
-let sortConfig = ref({})
+const sortConfig = ref({})
+const showMoreTokens = ref(false) // Subscribe / unsubscribe websocket on toggle
+const showMoreButtonText = ref('SHOW MORE')
 const markets = ref({
   // BTC: { price: '5000', change24hPercent: '-2%', change24h: '-1000', volumeCoin: '1', volumeUSD: '1' },
 })
@@ -43,8 +45,12 @@ let throttleTimer = null
 const updateData = (newData) => {
   if (!throttleTimer) {
     throttleTimer = setTimeout(() => {
-      // {...newData} needed because newData would point at the same reference so vue does not "see" new data
-      markets.value = { ...newData }
+      if (showMoreTokens.value) {
+        // {...newData} needed because newData would point at the same reference so vue does not "see" new data
+        markets.value = { ...newData }
+      } else {
+        markets.value = Object.fromEntries(Object.entries(newData).slice(0, 100))
+      }
       throttleTimer = null
     }, 200)
   }
@@ -68,7 +74,7 @@ const connect = () => {
   const socket = new WebSocket('wss://data-stream.binance.vision/ws')
   socket.onopen = () => {
     console.log('Connected to Binance WebSocket')
-    const subscriptions = Array.from(Object.keys(markets.value), (value) => { return (value.toLowerCase() + "usdt@ticker") })
+    const subscriptions = Array.from(Object.keys(internalMarkets), (value) => { return (value.toLowerCase() + "usdt@ticker") })
     socket.send(JSON.stringify({
       "method": "SUBSCRIBE",
       "params": subscriptions,
@@ -92,6 +98,20 @@ const connect = () => {
 }
 
 /**
+ * Shows more / less tokens on button click
+ */
+const showMore = () => {
+  showMoreTokens.value = !showMoreTokens.value
+  if (showMoreTokens.value) {
+    showMoreButtonText.value = "SHOW LESS"
+    markets.value = { ...internalMarkets }
+  } else {
+    showMoreButtonText.value = "SHOW MORE"
+    markets.value = Object.fromEntries(Object.entries(internalMarkets).slice(0, 100))
+  }
+}
+
+/**
  * Fetch and filter all markets from binance.
  * Returns the top 100 coins / tokens
  */
@@ -99,11 +119,12 @@ async function loadMarkets() {
   let tickers = await fetch("https://api.binance.com/api/v3/ticker/24hr").then(res => res.json()).catch(err => console.error(err))
   tickers = tickers.filter(item => item.symbol.endsWith("USDT"))
   tickers = tickers.sort((a, b) => Number(b.quoteVolume) - Number(a.quoteVolume))
-  tickers = tickers.slice(0, 100)
+  tickers = tickers.slice(0, 200)
   tickers = tickers.forEach((ticker, index) => {
     internalMarkets[ticker.symbol.replace("USDT", "")] = { index: index + 1, price: ticker.askPrice, changePercent: ticker.priceChangePercent, change: ticker.priceChange, volume: ticker.volume, volumeUSD: ticker.quoteVolume }
-    markets.value[ticker.symbol.replace("USDT", "")] = { index: index + 1, price: ticker.askPrice, changePercent: ticker.priceChangePercent, change: ticker.priceChange, volume: ticker.volume, volumeUSD: ticker.quoteVolume }
+    // markets.value[ticker.symbol.replace("USDT", "")] = { index: index + 1, price: ticker.askPrice, changePercent: ticker.priceChangePercent, change: ticker.priceChange, volume: ticker.volume, volumeUSD: ticker.quoteVolume }
   })
+  markets.value = Object.fromEntries(Object.entries(internalMarkets).slice(0, 100))
 }
 
 // Open socket onMounted, close onUnmounted
@@ -227,11 +248,14 @@ onUnmounted(() => socket?.close())
         </tr>
       </thead>
       <tbody>
-        <MarketTableRow v-for="(data, symbol, index) in sortedMarkets" :symbol="symbol" :index="data.index"
+        <MarketTableRow v-for="(data, symbol, index) in sortedMarkets" :key="index" :symbol="symbol" :index="data.index"
           :price="data.price" :changePercent="data.changePercent" :change="data.change" :volume="data.volume"
           :volumeUSD="data.volumeUSD" :lastItem="index != Object.keys(markets).length - 1" />
       </tbody>
     </table>
+    <div class="showMoreButtonWrapper">
+      <CustomButton class="showMoreButton" :text="showMoreButtonText" @click="showMore()" />
+    </div>
   </div>
 </template>
 
@@ -262,5 +286,14 @@ th {
   color: var(--text-secondary);
   display: flex;
   flex-direction: column;
+}
+
+.showMoreButtonWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.showMoreButton {
+  font-weight: inherit;
 }
 </style>
