@@ -21,39 +21,6 @@ const openNewsLink = () => {
 </template>
 
 <style scoped>
-.newsItem {
-    background-color: var(--bg-surface);
-    /* Wichtig für das Stretch-Verhalten, damit alle cards gleich hoch werden */
-    height: 100%;
-    border-radius: 1rem;
-    margin-top: 1rem;
-    cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    flex-direction: column;
-}
-
-.newsItem:hover {
-    background-color: var(--border-subtle);
-}
-
-
-/* Die Hero-Card ganz am Anfang */
-.newsItem:first-child {
-    grid-column: span 2;
-}
-
-/* Spezifisch das 2. Item */
-.newsItem:nth-child(2) {
-    grid-column: span 2;
-}
-
-/* Ab der 7. Card jede 5. */
-.newsItem:nth-child(5n + 7) {
-    grid-column: span 2;
-}
-
-
 .newsItem img {
     width: 100%;
     /* flex-grow = bild streched die height, damit die card, falls sie leer erscheinen würde voll ist mit dem bild */

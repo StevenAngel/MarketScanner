@@ -37,19 +37,51 @@ onMounted(loadFeed)
 
 <template>
     <div class="newsFeed">
-        <h1>News</h1>
         <div class="categories">
+            <h1>News</h1>
             <NewsSortButton v-for="(item, index) in feed.allCategories" :key="index" :text="item"
                 :class="{ highlighted: sortKey == item }" @click="sortNews(item)" />
         </div>
         <div class="newsLayout">
             <NewsItem v-for="(item, index) in filteredFeed" :key="index" :imgSrc="item.imageUrl" :text="item.title"
-                :author="item.author" :content="item.content" :publishDate="item.date" :link="item.link" />
+                :author="item.author" :content="item.content" :publishDate="item.date" :link="item.link"
+                class="newsItem" />
         </div>
     </div>
 </template>
 
 <style scoped>
+.newsItem {
+    background-color: var(--bg-surface);
+    /* Wichtig für das Stretch-Verhalten, damit alle cards gleich hoch werden */
+    height: 100%;
+    border-radius: 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.newsItem:hover {
+    background-color: var(--border-subtle);
+}
+
+/* Die Hero-Card ganz am Anfang */
+.newsItem:first-child {
+    grid-column: span 2;
+}
+
+/* Spezifisch das 2. Item */
+.newsItem:nth-child(2) {
+    grid-column: span 2;
+}
+
+/* Ab der 7. Card jede 5. */
+.newsItem:nth-child(5n + 7) {
+    grid-column: span 2;
+}
+
 .newsFeed {
     padding: 2rem;
 }
@@ -74,15 +106,18 @@ onMounted(loadFeed)
 
 .categories {
     position: sticky;
-    top: 1rem;
+    top: 0;
     margin-top: 1rem;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
     gap: 1rem;
-    width: fit-content;
+    /* width: fit-content; */
     padding: 1rem;
-    background-color: rgba(255, 255, 255, 0.295);
-    border-radius: 1rem;
+    background-color: var(--bg-main);
+    border-bottom: 1px solid var(--border-subtle);
+    /* border-radius: 1rem; */
     margin: auto;
 }
 
