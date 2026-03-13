@@ -11,6 +11,7 @@ const filteredFeed = computed(() => {
         feed.value.news.forEach(element => {
             if (element.categories.includes(sortKey.value) || sortKey.value == '') {
                 filtered.push(element)
+                console.log(element.date)
             }
         })
         return filtered;
@@ -43,7 +44,7 @@ onMounted(loadFeed)
         </div>
         <div class="newsLayout">
             <NewsItem v-for="(item, index) in filteredFeed" :key="index" :imgSrc="item.imageUrl" :text="item.title"
-                :link="item.link" />
+                :author="item.author" :content="item.content" :publishDate="item.date" :link="item.link" />
         </div>
     </div>
 </template>
@@ -54,11 +55,20 @@ onMounted(loadFeed)
 }
 
 .newsLayout {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    /* 
+        grid-template-colums: bestimme colums
+        repeat: wiederhole so oft wie nötig, auto-fill: berechnet, wie viele Spalten mit der Mindestbreite (20rem) in den Container passen, wenn container 60rem breit -> auto 3 spalten
+        minmax: minimal 20rem pro spalte, max 1fr = wenn platz übrig ist (z.b. container = 50rem) pro spalte aber nur 20rem belegt, teilen sich die 2 spalten den restplatz und werden 25rem pro spalte
+    */
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    width: 90rem;
+    /* Alle Karten in einer Zeile werden gleich hoch */
+    align-items: stretch;
+    /* Passt kleinere karten in lücken die durch große karten entstehen */
+    /* grid-auto-flow: dense; */
     gap: 1rem;
-    justify-content: center;
-    margin: 1rem;
+    margin: 1rem auto;
 }
 
 .categories {
