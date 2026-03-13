@@ -1,6 +1,6 @@
 <script setup>
 import Navbar from './components/layout/Navbar.vue'
-
+import MarqueeBar from './components/layout/MarqueeBar.vue'
 /**
  * Reowned appkit for vue to connect your wallet
  * Whole setup below
@@ -42,6 +42,7 @@ const modal = createAppKit({
 </script>
 
 <template>
+  <MarqueeBar />
   <Navbar />
   <!-- v-slot extracts current component vue wants to render as variable -->
   <!-- keep-alive does not rerender the included page (or all pages if none included) if it was rendered once -->
