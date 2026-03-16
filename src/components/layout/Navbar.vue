@@ -1,6 +1,7 @@
 <script setup>
 import Logo from '../../assets/branding/logo.png'
 import WalletConnectButton from '../walletConnect/WalletConnectButton.vue';
+import LightModeSwitch from './LightModeSwitch.vue';
 </script>
 
 <template>
@@ -10,7 +11,11 @@ import WalletConnectButton from '../walletConnect/WalletConnectButton.vue';
             <router-link to="/" class="navbarItem"><img :src="Logo" class="logo" /></router-link>
             <router-link to="/news" class="navbarItem">News</router-link>
             <router-link to="/portfolio" class="navbarItem">Portfolio</router-link>
-            <WalletConnectButton class="web3Login" />
+
+            <div class="buttonsRight">
+                <LightModeSwitch />
+                <WalletConnectButton />
+            </div>
         </div>
     </div>
 </template>
@@ -47,7 +52,10 @@ import WalletConnectButton from '../walletConnect/WalletConnectButton.vue';
     height: 5rem;
 }
 
-.web3Login {
+.buttonsRight {
     margin-left: auto;
+    display: flex;
+    align-items: inherit;
+    gap: 1rem;
 }
 </style>

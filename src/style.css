@@ -4,12 +4,27 @@
     /* Für deine Market-Table */
     --border-subtle: #334155;
 
-    --brand-purple: #8B5CF6;
     --crypto-up: #10B981;
     --crypto-down: #F43F5E;
 
     --text-primary: #F8FAFC;
     --text-secondary: #94A3B8;
+}
+
+html.light {
+    --bg-main: #F8FAFC;
+    --bg-surface: #CBD5E1;
+    --border-subtle: #64748B;
+
+    --crypto-up: #10B981;
+    --crypto-down: #F43F5E;
+
+    --text-primary: #0F172A;
+    --text-secondary: #26313f;
+}
+
+html.light .logo {
+    filter: invert(1)
 }
 
 * {
