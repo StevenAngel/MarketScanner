@@ -31,39 +31,6 @@ app.use(cors())
 
 // Endpoint to get rss feed from cointelegraph and sort data
 app.get('/rss', async (req, res) => {
-    // const feed = await fetch('https://cointelegraph.com/rss', {
-    //     headers: {
-    //         // Gängiger User-Agent String für Chrome
-    //         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    //         'Accept': 'application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8'
-    //     }
-    // }).then(res => res.text()).catch(err => console.error(err))
-    // // Parse xml to json
-    // const parsed = parser.parse(feed).rss.channel.item
-    // const news = []
-    // const allCategories = new Set([])
-    // parsed.forEach(element => {
-    //     let categories = null
-    //     if (!Array.isArray(element.category)) {
-    //         categories = [element.category]
-    //     } else {
-    //         categories = element.category
-    //     }
-
-    //     categories.forEach(cat => allCategories.add(cat))
-    //     const imageUrl = element.description.split("src=")[1].match(/"(.*?)"/)[1]
-    //     news.push({ title: element.title, link: element.link, imageUrl, categories })
-    // });
-    // res.send({ news, allCategories: Array.from(allCategories) })
-
-    // const feed = await fetch('https://decrypt.co/feed', {
-    //     headers: {
-    //         // Gängiger User-Agent String für Chrome
-    //         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    //         'Accept': 'application/rss+xml, application/xml, text/xml;q=0.9, */*;q=0.8'
-    //     }
-    // }).then(res => res.text()).catch(err => console.error(err))
-    // Parse xml to json
     const parsed = await parser.parseURL("https://decrypt.co/feed")
     const news = []
     const allCategories = new Set([])
@@ -81,7 +48,6 @@ app.get('/rss', async (req, res) => {
 
         categories.forEach(cat => allCategories.add(cat))
         const imageUrl = element.enclosure.url
-        console.log(element)
         news.push({ title: element.title, link: element.link, categories, imageUrl, author: element.creator, date: element.isoDate, content: element.contentSnippet })
     });
     res.send({ news, allCategories: Array.from(allCategories) })
