@@ -37,7 +37,7 @@ onMounted(loadFeed)
 
 <template>
     <div class="newsFeed">
-        <div class="categories">
+        <div class="newsCategories">
             <h1>News</h1>
             <NewsSortButton v-for="(item, index) in feed.allCategories" :key="index" :text="item"
                 :class="{ highlighted: sortKey == item }" @click="sortNews(item)" />
@@ -104,7 +104,7 @@ onMounted(loadFeed)
     margin: 1rem auto;
 }
 
-.categories {
+.newsCategories {
     position: sticky;
     top: 0;
     margin-top: 1rem;

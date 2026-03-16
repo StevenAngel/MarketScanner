@@ -29,6 +29,7 @@ import LightModeSwitch from './LightModeSwitch.vue';
     top: 0; */
     z-index: 100;
     border-bottom: 1px solid var(--border-subtle);
+    user-select: none;
 }
 
 .innerNavbar {
@@ -56,6 +57,6 @@ import LightModeSwitch from './LightModeSwitch.vue';
     margin-left: auto;
     display: flex;
     align-items: inherit;
-    gap: 1rem;
+    gap: inherit;
 }
 </style>
