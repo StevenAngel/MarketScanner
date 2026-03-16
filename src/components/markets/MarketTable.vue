@@ -1,4 +1,5 @@
 <script setup>
+import { appState } from '../stores/crypto.js'
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import MarketTableRow from './MarketTableRow.vue'
 import CustomButton from '../layout/CustomButton.vue'
@@ -119,10 +120,13 @@ async function loadMarkets() {
   let tickers = await fetch("https://api.binance.com/api/v3/ticker/24hr").then(res => res.json()).catch(err => console.error(err))
   tickers = tickers.filter(item => item.symbol.endsWith("USDT"))
   tickers = tickers.sort((a, b) => Number(b.quoteVolume) - Number(a.quoteVolume))
+  if (Object.entries(appState.crypto).length == 0) {
+    appState.cryptos = tickers
+  }
+
   tickers = tickers.slice(0, 200)
   tickers = tickers.forEach((ticker, index) => {
     internalMarkets[ticker.symbol.replace("USDT", "")] = { index: index + 1, price: ticker.askPrice, changePercent: ticker.priceChangePercent, change: ticker.priceChange, volume: ticker.volume, volumeUSD: ticker.quoteVolume }
-    // markets.value[ticker.symbol.replace("USDT", "")] = { index: index + 1, price: ticker.askPrice, changePercent: ticker.priceChangePercent, change: ticker.priceChange, volume: ticker.volume, volumeUSD: ticker.quoteVolume }
   })
   markets.value = Object.fromEntries(Object.entries(internalMarkets).slice(0, 100))
 }
