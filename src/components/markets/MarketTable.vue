@@ -72,15 +72,11 @@ const sortMarkets = (key) => {
 
 // Connect websocket onMount, subscribe to all tickers onOpen
 const connect = () => {
-  const socket = new WebSocket('wss://data-stream.binance.vision/ws')
+  const socket = new WebSocket('wss://fstream.binance.com/ws/market')
   socket.onopen = () => {
     console.log('Connected to Binance WebSocket')
     const subscriptions = Array.from(Object.keys(internalMarkets), (value) => { return (value.toLowerCase() + "usdt@ticker") })
-    socket.send(JSON.stringify({
-      "method": "SUBSCRIBE",
-      "params": subscriptions,
-      "id": 1
-    }))
+    socket.send(JSON.stringify({ method: "SUBSCRIBE", params: ["alpacausdt@ticker"] }))
   }
 
   socket.onmessage = (event) => {
@@ -117,7 +113,7 @@ const showMore = () => {
  * Returns the top 100 coins / tokens
  */
 async function loadMarkets() {
-  let tickers = await fetch("https://api.binance.com/api/v3/ticker/24hr").then(res => res.json()).catch(err => console.error(err))
+  let tickers = await fetch("https://fapi.binance.com/fapi/v1/ticker/24hr").then(res => res.json()).catch(err => console.error(err))
   tickers = tickers.filter(item => item.symbol.endsWith("USDT"))
   tickers = tickers.sort((a, b) => Number(b.quoteVolume) - Number(a.quoteVolume))
   if (Object.entries(appState.cryptos).length == 0) {
@@ -126,7 +122,7 @@ async function loadMarkets() {
 
   tickers = tickers.slice(0, 200)
   tickers = tickers.forEach((ticker, index) => {
-    internalMarkets[ticker.symbol.replace("USDT", "")] = { index: index + 1, price: ticker.askPrice, changePercent: ticker.priceChangePercent, change: ticker.priceChange, volume: ticker.volume, volumeUSD: ticker.quoteVolume }
+    internalMarkets[ticker.symbol.replace("USDT", "")] = { index: index + 1, price: ticker.lastPrice, changePercent: ticker.priceChangePercent, change: ticker.priceChange, volume: ticker.volume, volumeUSD: ticker.quoteVolume }
   })
   markets.value = Object.fromEntries(Object.entries(internalMarkets).slice(0, 100))
 }

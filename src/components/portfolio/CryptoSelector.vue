@@ -1,13 +1,22 @@
 <script setup>
-import { ref, watch } from 'vue';
-import CustomButton from '../layout/CustomButton.vue';
+import { ref } from 'vue';
 const emit = defineEmits(['coinSelected'])
 const props = defineProps(['selectableCoins'])
+const showCoins = ref(props.selectableCoins)
 const showDropdown = ref(false)
 // defineModel, for v-model bidirectional tunnel, no emits needed
 // const selected = defineModel();
 const toggleDropdown = () => {
     showDropdown.value = !showDropdown.value
+}
+
+const searchCoin = (input) => {
+    const search = input.target.value
+    if (search != '') {
+        showCoins.value = props.selectableCoins.filter(coin => coin.toLowerCase().includes(search.toLowerCase()))
+    } else {
+        showCoins.value = props.selectableCoins
+    }
 }
 
 const coinSelected = (coin, value) => {
@@ -17,51 +26,53 @@ const coinSelected = (coin, value) => {
 </script>
 
 <template>
-    <div>
-        <CustomButton class="button" text="coins" @click="toggleDropdown()" />
-        <div v-show="!showDropdown" class="dropdown">
-            <ul class="dropdownList">
-                <li v-for="item of props.selectableCoins" :key="item" class="dropdownItem">
-                    <label class="innerItem">
-                        <!-- v-model for bidirectional tunnel from parent to child and child to parent, only for inputs -->
-                        <!-- <input type="checkbox" :value="item" v-model="selected" /> -->
-                        <!-- use emit, because then i need no "watch" to start a function -->
-                        <input type="checkbox" :value="item" @change="coinSelected(item, $event)" />
-                        <span>{{ item }}</span>
-                    </label>
-                </li>
-            </ul>
-        </div>
+    <div class="listWrapper">
+        <input class="coinSearch textInput" type="text" placeholder="Search for coins" @input="searchCoin" />
+        <ul class="dropdownList">
+            <li v-for="item of showCoins" :key="item" class="dropdownItem">
+                <label class="innerItem">
+                    <!-- v-model for bidirectional tunnel from parent to child and child to parent, only for inputs -->
+                    <!-- <input type="checkbox" :value="item" v-model="selected" /> -->
+                    <!-- use emit, because then i need no "watch" to start a function -->
+                    <input type="checkbox" :value="item" @change="coinSelected(item, $event)" />
+                    <span>{{ item }}</span>
+                    <!-- <input type="number" :value="item" placeholder="% of portfolio" /> -->
+                </label>
+            </li>
+        </ul>
     </div>
 </template>
 
 <style scoped>
-.dropdown-slide-enter-active,
-.dropdown-slide-leave-active {
-    transition: all 0.3s ease;
+.textInput {
+    height: 1rem;
+    font-size: inherit;
+    font-family: inherit;
 }
 
-/* Start- und Endzustand der Animation */
-.dropdown-slide-enter-from,
-.dropdown-slide-leave-to {
-    opacity: 0;
-    /* transform: translateY(-10px); */
+.coinSearch {
+    position: sticky;
+    top: 0;
 }
 
-.dropdown {
-    z-index: 99;
-    position: absolute;
-    border: 1px solid var(--text-primary);
-    border-radius: .5rem;
-    background-color: var(--bg-main);
-    user-select: none;
+.listWrapper {
+    border: 1px solid var(--text-secondary);
+    border-radius: 1rem;
+    padding: 0;
+    height: 400px;
+    width: fit-content;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    scrollbar-color: #444 #1a1a1a;
+    /* Fade out tokens so the user knows he can scroll */
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
 
 .dropdownList {
     list-style-type: none;
     padding: 0;
-    height: fit-content;
-    overflow: auto;
 }
 
 .dropdownItem {
@@ -90,24 +101,5 @@ const coinSelected = (coin, value) => {
 
 .dropdownText {
     align-content: center;
-}
-
-.button {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    padding: .5rem;
-    cursor: pointer;
-    width: fit-content;
-    border-radius: .5rem;
-    font-size: inherit;
-    font-style: inherit;
-    color: inherit;
-    font-weight: inherit;
-    display: flex;
-    gap: .5rem;
-}
-
-.button:hover {
-    background-color: var(--border-subtle);
 }
 </style>
