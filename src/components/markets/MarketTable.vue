@@ -120,7 +120,7 @@ async function loadMarkets() {
   let tickers = await fetch("https://api.binance.com/api/v3/ticker/24hr").then(res => res.json()).catch(err => console.error(err))
   tickers = tickers.filter(item => item.symbol.endsWith("USDT"))
   tickers = tickers.sort((a, b) => Number(b.quoteVolume) - Number(a.quoteVolume))
-  if (Object.entries(appState.crypto).length == 0) {
+  if (Object.entries(appState.cryptos).length == 0) {
     appState.cryptos = tickers
   }
 

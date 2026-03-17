@@ -3,6 +3,7 @@ import { useAppKitAccount } from '@reown/appkit/vue'
 import { ref, computed, watch } from "vue"
 import PieChart from "@/components/charts/PieChart.vue"
 import LineChart from "@/components/charts/LineChart.vue"
+import PortfolioBuilder from '@/components/portfolio/PortfolioBuilder.vue'
 import ChainSelector from "@/components/portfolio/ChainSelector.vue"
 const appKitAccount = useAppKitAccount({ "namespace": "eip155" })
 
@@ -97,6 +98,7 @@ watch(address, (newVal,) => {
     <div v-else>
         <h1 class="connectMessage">Please Connect Your Wallet to View Your Portfolio</h1>
     </div>
+    <PortfolioBuilder />
 </template>
 
 <style scoped>
