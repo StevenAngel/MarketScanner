@@ -8,22 +8,23 @@ cointable)
 */
 <script setup>
 import CryptoSelector from './CryptoSelector.vue';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { appState } from '../stores/crypto.js'
+import LineChart from '../charts/LineChart.vue';
 const selectableCoins = ref([])
 const selectedCoins = ref([])
 const coinHistory = {}
 
-watch(selectedCoins, (newVal, oldValue) => {
-
-})
-
 // Fetch coin history from binance (backend)
-const fetchCoin = (coin, isChecked) => {
+const fetchCoin = async (coin, isChecked) => {
     if (isChecked) {
         selectedCoins.value.push(coin)
         if (!coinHistory[coin]) {
-
+            const history = await fetch("http://localhost:3000/coinHistory", {
+                method: "POST",
+                body: JSON.stringify({ coin })
+            }).then(res => res.json()).catch(err => console.error(err))
+            coinHistory[coin] = history
         }
     } else {
         const index = selectedCoins.value.indexOf(coin)
@@ -47,7 +48,8 @@ onMounted(loadMarkets)
 
 <template>
     <!-- v-model for bidirectional tunnel from parent to child and child to parent -->
-    <CryptoSelector :selectableCoins="selectableCoins" v-model="selectedCoins" @coinSelected="fetchCoin" />
+    <CryptoSelector :selectableCoins="selectableCoins" @coinSelected="fetchCoin" />
+    <LineChart />
 </template>
 
 <style scoped></style>

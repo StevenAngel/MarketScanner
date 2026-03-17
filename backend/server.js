@@ -62,6 +62,21 @@ app.post('/portfolio', limiter, async (req, res) => {
     res.send({ portfolio, portfolioHistory })
 })
 
+// Endpoint to get a coins history
+app.post('/coinHistory', async (req, res) => {
+    const coin = req.body.coin || "BTC"
+    // let startDate = req.body.start || 0
+    let candles = []
+    //&startTime=${startDate}
+    do {
+        const coinHistory = await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${coin}USDT&interval=1d`).then(res => res.json()).catch(err => console.error(err))
+        candles = [...candles, ...coinHistory.map(val => { return { time: val[0], price: val[4] } })]
+        startDate = candles[candles.length - 1].time
+    } while (candles[candles.length - 1].time <= Date.now() - (1000 * 60 * 60 * 24)) // Last candle < 24h
+
+    res.send(candles)
+})
+
 app.listen('3000', () => {
     console.log('Running on http://localhost:3000')
 })
