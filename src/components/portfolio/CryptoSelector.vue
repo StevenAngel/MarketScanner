@@ -1,22 +1,21 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 const emit = defineEmits(['coinSelected'])
 const props = defineProps(['selectableCoins'])
-const showCoins = ref(props.selectableCoins)
-const showDropdown = ref(false)
+const searchQuery = ref('')
+const showCoins = computed(() => {
+    if (!searchQuery.value) {
+        return props.selectableCoins
+    } else {
+        return props.selectableCoins.filter(coin => coin.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    }
+})
+
 // defineModel, for v-model bidirectional tunnel, no emits needed
 // const selected = defineModel();
-const toggleDropdown = () => {
-    showDropdown.value = !showDropdown.value
-}
 
 const searchCoin = (input) => {
-    const search = input.target.value
-    if (search != '') {
-        showCoins.value = props.selectableCoins.filter(coin => coin.toLowerCase().includes(search.toLowerCase()))
-    } else {
-        showCoins.value = props.selectableCoins
-    }
+    searchQuery.value = input.target.value
 }
 
 const coinSelected = (coin, value) => {
