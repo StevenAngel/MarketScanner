@@ -4,7 +4,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import MarketTableRow from './MarketTableRow.vue'
 import CustomButton from '../layout/CustomButton.vue'
 let socket = null
-const sortConfig = ref({})
+const sortConfig = ref({ key: "index", direction: "asc" })
 const showMoreTokens = ref(false) // Subscribe / unsubscribe websocket on toggle
 const showMoreButtonText = ref('SHOW TOP 200')
 const markets = ref({
@@ -20,9 +20,9 @@ const sortedMarkets = computed(() => {
   if (sortConfig.value.key != "symbol") {
     marketsArray.sort(([, a], [, b]) => {
       if (sortConfig.value.direction == "asc") {
-        return a[sortConfig.value.key] - b[sortConfig.value.key]
+        return Number(a[sortConfig.value.key]) - Number(b[sortConfig.value.key])
       } else if (sortConfig.value.direction == "desc") {
-        return b[sortConfig.value.key] - a[sortConfig.value.key]
+        return Number(b[sortConfig.value.key]) - Number(a[sortConfig.value.key])
       }
     })
   } else {
@@ -34,8 +34,12 @@ const sortedMarkets = computed(() => {
       }
     })
   }
+  if (showMoreTokens.value) {
+    return marketsArray
+  } else {
+    return marketsArray.slice(0, 100)
+  }
 
-  return Object.fromEntries(marketsArray)
 })
 
 // Throttling data
@@ -46,12 +50,8 @@ let throttleTimer = null
 const updateData = (newData) => {
   if (!throttleTimer) {
     throttleTimer = setTimeout(() => {
-      if (showMoreTokens.value) {
-        // {...newData} needed because newData would point at the same reference so vue does not "see" new data
-        markets.value = { ...newData }
-      } else {
-        markets.value = Object.fromEntries(Object.entries(newData).slice(0, 100))
-      }
+      // {...newData} needed because newData would point at the same reference so vue does not "see" new data
+      markets.value = { ...newData }
       throttleTimer = null
     }, 200)
   }
@@ -76,7 +76,7 @@ const connect = () => {
   socket.onopen = () => {
     console.log('Connected to Binance WebSocket')
     const subscriptions = Array.from(Object.keys(internalMarkets), (value) => { return (value.toLowerCase() + "usdt@ticker") })
-    socket.send(JSON.stringify({ method: "SUBSCRIBE", params: ["alpacausdt@ticker"] }))
+    socket.send(JSON.stringify({ method: "SUBSCRIBE", params: subscriptions }))
   }
 
   socket.onmessage = (event) => {
@@ -101,10 +101,10 @@ const showMore = () => {
   showMoreTokens.value = !showMoreTokens.value
   if (showMoreTokens.value) {
     showMoreButtonText.value = "SHOW TOP 100"
-    markets.value = { ...internalMarkets }
+    // markets.value = { ...internalMarkets }
   } else {
     showMoreButtonText.value = "SHOW TOP 200"
-    markets.value = Object.fromEntries(Object.entries(internalMarkets).slice(0, 100))
+    // markets.value = Object.fromEntries(Object.entries(internalMarkets).slice(0, 100))
   }
 }
 
@@ -124,7 +124,7 @@ async function loadMarkets() {
   tickers = tickers.forEach((ticker, index) => {
     internalMarkets[ticker.symbol.replace("USDT", "")] = { index: index + 1, price: ticker.lastPrice, changePercent: ticker.priceChangePercent, change: ticker.priceChange, volume: ticker.volume, volumeUSD: ticker.quoteVolume }
   })
-  markets.value = Object.fromEntries(Object.entries(internalMarkets).slice(0, 100))
+  markets.value = Object.fromEntries(Object.entries(internalMarkets).sort((a, b) => Number(a[1].index) - Number(b[1].index)))
 }
 
 // Open socket onMounted, close onUnmounted
@@ -248,9 +248,10 @@ onUnmounted(() => socket?.close())
         </tr>
       </thead>
       <tbody>
-        <MarketTableRow v-for="(data, symbol, index) in sortedMarkets" :key="index" :symbol="symbol" :index="data.index"
-          :price="data.price" :changePercent="data.changePercent" :change="data.change" :volume="data.volume"
-          :volumeUSD="data.volumeUSD" :lastItem="index != Object.keys(markets).length - 1" />
+        <MarketTableRow v-for="(data, index) in sortedMarkets" :key="index" :symbol="data[0]" :index="data[1].index"
+          :price="data[1].price" :changePercent="data[1].changePercent" :change="data[1].change"
+          :volume="data[1].volume" :volumeUSD="data[1].volumeUSD"
+          :lastItem="index != Object.keys(markets).length - 1" />
       </tbody>
     </table>
     <div class="showMoreButtonWrapper">
