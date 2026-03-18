@@ -25,7 +25,7 @@ const createWidget = () => {
 
     // Hier konfigurieren wir das Widget dynamisch
     script.innerHTML = JSON.stringify({
-        "autosize": true,
+        "autosize": false,
         "symbol": `BINANCE:${props.coin}USDT`, // Dynamisch durch Props!
         "interval": "D",
         "timezone": "Etc/UTC",
@@ -68,7 +68,7 @@ onMounted(() => {
                 <div class="nameLaunched">
                     <h2>{{ coinData.name }}</h2>
                     <small v-if="coinData.launched" class="date">{{ new Date(coinData.launched).toLocaleDateString()
-                        }}</small>
+                    }}</small>
                 </div>
             </div>
             <div class="rightHeader">
@@ -88,9 +88,10 @@ onMounted(() => {
                         alt="X Logo" /></a>
             </div>
         </div>
-
-        <div class="tradingview-widget-container" ref="container">
-            <div class="tradingview-widget-container__widget"></div>
+        <div class="chartWrapper">
+            <div class="tradingview-widget-container" ref="container">
+                <div class="tradingview-widget-container__widget"></div>
+            </div>
         </div>
     </div>
 
@@ -105,15 +106,9 @@ onMounted(() => {
     height: 100%;
 }
 
-.tradingview-widget-container {
+.chartWrapper {
     width: 100%;
-    height: 1000px;
-    flex: 1;
-}
-
-.tradingview-widget-container__widget {
-    width: 100%;
-    height: 1000px;
+    height: 600px;
 }
 
 .coinHeader {
