@@ -20,9 +20,12 @@ const linechartData = computed(() => {
     let internalLinechartData = {}
     let linechartData = {}
     const activeCoins = selectedCoins.value.filter(coin => coinHistory.value[coin])
+    const allPercent = activeCoins.length > 0 ? activeCoins.reduce((accumulator, coin) => Number(accumulator) + Number(portfolioPercent.value[coin]), 0) : 100
+    console.log(allPercent)
     activeCoins.forEach(coin => {
-        const coinPercent = portfolioPercent.value[coin] / 100 || 1
-        const coinAmount = ((portfolioValue.value * coinPercent) / activeCoins.length) / Number(coinHistory.value[coin][0].price)
+        const relativePercent = portfolioPercent.value[coin] / allPercent || 1
+        console.log("relative", relativePercent)
+        const coinAmount = (portfolioValue.value * relativePercent) / Number(coinHistory.value[coin][0].price)
         coinHistory.value[coin].forEach(value => {
             if (!internalLinechartData[value.time]) {
                 internalLinechartData[value.time] = coinAmount * Number(value.price)
@@ -70,17 +73,11 @@ const fetchCoin = async (coin, isChecked) => {
 
 const updatePortfolioValue = (input) => {
     if (input.target.value != '') portfolioValue.value = Number(input.target.value)
-    // updateLineChart()
-}
-
-const updateLineChart = () => {
-
 }
 
 const updatePortfolioPercent = (coin, percent) => {
     console.log(coin, percent)
     portfolioPercent.value[coin] = percent
-    // updateLineChart()
 }
 
 // Load markets if not already done
