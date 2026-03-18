@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue';
-const emit = defineEmits(['coinSelected'])
+const emit = defineEmits(['coinSelected', 'coinPercentSelected'])
 const props = defineProps(['selectableCoins'])
+const selectedCoins = ref([])
 const searchQuery = ref('')
 const showCoins = computed(() => {
     if (!searchQuery.value) {
@@ -21,6 +22,17 @@ const searchCoin = (input) => {
 const coinSelected = (coin, value) => {
     const isChecked = value.target.checked
     emit("coinSelected", coin, isChecked)
+    if (isChecked) {
+        selectedCoins.value.push(coin)
+    } else {
+        const index = selectedCoins.value.indexOf(coin)
+        selectedCoins.value.splice(index, 1)
+    }
+}
+
+const coinPercentSelected = (coin, value) => {
+    const percent = value.target.value
+    emit("coinPercentSelected", coin, percent)
 }
 </script>
 
@@ -35,7 +47,8 @@ const coinSelected = (coin, value) => {
                     <!-- use emit, because then i need no "watch" to start a function -->
                     <input type="checkbox" :value="item" @change="coinSelected(item, $event)" />
                     <span>{{ item }}</span>
-                    <!-- <input type="number" :value="item" placeholder="% of portfolio" /> -->
+                    <input v-if="selectedCoins.includes(item)" class="percentInput" type="number" :value="item"
+                        placeholder="% of portfolio" @change="coinPercentSelected(item, $event)" />
                 </label>
             </li>
         </ul>
@@ -43,6 +56,17 @@ const coinSelected = (coin, value) => {
 </template>
 
 <style scoped>
+.percentInput {
+    width: 3rem;
+    appearance: textfield;
+}
+
+.percentInput::-webkit-outer-spin-button,
+.percentInput::-webkit-inner-spin-butto {
+    -webkit-appearance: none;
+
+}
+
 .textInput {
     height: 1rem;
     font-size: inherit;

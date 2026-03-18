@@ -11,12 +11,14 @@ import CryptoSelector from './CryptoSelector.vue';
 import { onMounted, ref } from 'vue';
 import { appState } from '../stores/crypto.js'
 import LineChart from '../charts/LineChart.vue';
+const portfolioPercent = ref({})
 const selectableCoins = ref([])
 const selectedCoins = ref([])
-const linechartDataX = ref([])
-const linechartDataY = ref([])
+const linechartData = ref({ linechartDataX: [], linechartDataY: [] })
+// const linechartDataX = ref([])
+// const linechartDataY = ref([])
 const portfolioValue = ref(1000)
-let linechartData = {}
+let internalLinechartData = {}
 const coinHistory = {}
 const loadingOptions = {
     text: 'Loading...',
@@ -56,21 +58,28 @@ const updatePortfolioValue = (input) => {
 }
 
 const updateLineChart = () => {
-    linechartData = {}
+    internalLinechartData = {}
     selectedCoins.value.forEach(coin => {
-        const coinAmount = (portfolioValue.value / selectedCoins.value.length) / Number(coinHistory[coin][0].price)
+        const coinPercent = portfolioPercent.value[coin] / 100 || 1
+        const coinAmount = ((portfolioValue.value * coinPercent) / selectedCoins.value.length) / Number(coinHistory[coin][0].price)
         coinHistory[coin].forEach(value => {
-            if (!linechartData[value.time]) {
-                linechartData[value.time] = coinAmount * Number(value.price)
+            if (!internalLinechartData[value.time]) {
+                internalLinechartData[value.time] = coinAmount * Number(value.price)
             } else {
-                linechartData[value.time] += coinAmount * Number(value.price)
+                internalLinechartData[value.time] += coinAmount * Number(value.price)
             }
         })
     })
 
-    linechartData = Object.fromEntries(Object.entries(linechartData).sort((a, b) => a.time - b.time))
-    linechartDataX.value = Object.entries(linechartData).map(value => new Date(Number(value[0])).toLocaleDateString())
-    linechartDataY.value = Object.entries(linechartData).map(value => value[1])
+    internalLinechartData = Object.fromEntries(Object.entries(internalLinechartData).sort((a, b) => a.time - b.time))
+    linechartData.value.linechartDataX = Object.entries(internalLinechartData).map(value => new Date(Number(value[0])).toLocaleDateString())
+    linechartData.value.linechartDataY = Object.entries(internalLinechartData).map(value => value[1])
+}
+
+const updatePortfolioPercent = (coin, percent) => {
+    console.log(coin, percent)
+    portfolioPercent.value[coin] = percent
+    updateLineChart()
 }
 
 // Load markets if not already done
@@ -104,9 +113,10 @@ onMounted(loadMarkets)
             </div>
         </div>
         <div class="portfolio">
-            <CryptoSelector :selectableCoins="selectableCoins" @coinSelected="fetchCoin" />
-            <LineChart class="chart" :lineChartDataX="linechartDataX" :lineChartDataY="linechartDataY" :loading="false"
-                :loading-options="loadingOptions" />
+            <CryptoSelector :selectableCoins="selectableCoins" @coinSelected="fetchCoin"
+                @coinPercentSelected="updatePortfolioPercent" />
+            <LineChart class="chart" :lineChartDataX="linechartData.linechartDataX"
+                :lineChartDataY="linechartData.linechartDataY" :loading="false" :loading-options="loadingOptions" />
         </div>
     </div>
 </template>
