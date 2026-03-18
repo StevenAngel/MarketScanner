@@ -67,8 +67,9 @@ onMounted(() => {
                 <img :src="coinData.logo" :alt="coinData.name + ' Logo'" />
                 <div class="nameLaunched">
                     <h2>{{ coinData.name }}</h2>
-                    <small v-if="coinData.launched" class="date">{{ new Date(coinData.launched).toLocaleDateString()
-                    }}</small>
+                    <small v-if="coinData.launched" class="description">{{
+                        new Date(coinData.launched).toLocaleDateString()
+                        }}</small>
                 </div>
             </div>
             <div class="rightHeader">
@@ -94,7 +95,6 @@ onMounted(() => {
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped>
@@ -135,7 +135,7 @@ onMounted(() => {
     flex-direction: column;
 }
 
-.date {
+.description {
     color: var(--text-secondary)
 }
 

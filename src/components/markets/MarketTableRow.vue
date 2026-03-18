@@ -1,5 +1,4 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
 import MarketTableCell from './MarketTableCell.vue'
 
 // Get data passed from parent with defineProps
@@ -7,15 +6,18 @@ const market = defineProps(['symbol', 'index', 'price', 'changePercent', 'change
 </script>
 
 <template>
-  <tr>
-    <MarketTableCell :value="market.index" type="index" :id="market.index" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.symbol" type="symbol" :id="market.index" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.price" type="usd" :id="market.index" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.changePercent" type="percent" :id="market.index" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.change" type="usd" :id="market.index" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.volume" type="volume" :id="market.index" :isLast="market.lastItem" />
-    <MarketTableCell :value="market.volumeUSD" type="usd" :id="market.index" :isLast="market.lastItem" />
-  </tr>
+  <!-- custom router link to navigate between pages without shifting my table layout -->
+  <router-link :to="{ name: 'coin', params: { coin: market.symbol } }" custom v-slot="{ navigate }">
+    <tr @click="navigate">
+      <MarketTableCell :value="market.index" type="index" :id="market.index" :isLast="market.lastItem" />
+      <MarketTableCell :value="market.symbol" type="symbol" :id="market.index" :isLast="market.lastItem" />
+      <MarketTableCell :value="market.price" type="usd" :id="market.index" :isLast="market.lastItem" />
+      <MarketTableCell :value="market.changePercent" type="percent" :id="market.index" :isLast="market.lastItem" />
+      <MarketTableCell :value="market.change" type="usd" :id="market.index" :isLast="market.lastItem" />
+      <MarketTableCell :value="market.volume" type="volume" :id="market.index" :isLast="market.lastItem" />
+      <MarketTableCell :value="market.volumeUSD" type="usd" :id="market.index" :isLast="market.lastItem" />
+    </tr>
+  </router-link>
 </template>
 
 <style scoped>
