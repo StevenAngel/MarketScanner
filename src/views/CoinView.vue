@@ -61,25 +61,96 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="coinHeader">
-        <div v-if="loading" class="skeleton-circle"></div>
-        <img v-else-if="coinData" :src="coinData.logo" />
+    <div class="coinPageWrapper">
+        <div v-if="coinData" class="coinHeader">
+            <div class="leftHeader">
+                <img :src="coinData.logo" :alt="coinData.name + ' Logo'" />
+                <div class="nameLaunched">
+                    <h2>{{ coinData.name }}</h2>
+                    <small v-if="coinData.launched" class="date">{{ new Date(coinData.launched).toLocaleDateString()
+                        }}</small>
+                </div>
+            </div>
+            <div class="rightHeader">
+                <a v-if="coinData.website" class="link" target="_blank"
+                    :href="coinData.website"><small>[Website]</small></a>
+                <a v-if="coinData.explorer" class="link" target="_blank"
+                    :href="coinData.explorer"><small>[Blockexplorer]</small></a>
+                <a v-if="coinData.technicalDocs" class="link" target="_blank"
+                    :href="coinData.technicalDocs"><small>[Whitepaper]</small></a>
+                <a v-if="coinData.sourceCode" class="link" target="_blank" :href="coinData.sourceCode"><small>[Source
+                        Code]</small></a>
+                <a v-if="coinData.reddit" target="_blank" :href="coinData.reddit"><img class="socialIcon"
+                        src="https://www.iconpacks.net/icons/5/free-reddit-circle-logo-icon-16620.png"
+                        alt="Reddit Logo" /></a>
+                <a v-if="coinData.twitter" target="_blank" :href="coinData.twitter"><img class="socialIcon"
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/X_icon.svg/960px-X_icon.svg.png?_=20250519203220"
+                        alt="X Logo" /></a>
+            </div>
+        </div>
 
+        <div class="tradingview-widget-container" ref="container">
+            <div class="tradingview-widget-container__widget"></div>
+        </div>
     </div>
-    <div class="tradingview-widget-container" ref="container">
-        <div class="tradingview-widget-container__widget"></div>
-    </div>
+
 </template>
 
 <style scoped>
+.coinPageWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1rem;
+    height: 100%;
+}
+
 .tradingview-widget-container {
-    /* Oder was auch immer du brauchst */
     width: 100%;
     height: 1000px;
+    flex: 1;
 }
 
 .tradingview-widget-container__widget {
     width: 100%;
     height: 1000px;
+}
+
+.coinHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.leftHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rightHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nameLaunched {
+    display: flex;
+    flex-direction: column;
+}
+
+.date {
+    color: var(--text-secondary)
+}
+
+.socialIcon {
+    width: 50px;
+    height: 50px;
+}
+
+.link {
+    text-decoration: none;
+    color: blueviolet;
 }
 </style>

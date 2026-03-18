@@ -78,13 +78,13 @@ app.post('/coinHistory', async (req, res) => {
 
 // Endpoint to get coin data
 app.post('/coinData', async (req, res) => {
-    const coin = req.body.coin || "BTC"
+    const coin = req.body.coin.toUpperCase() || "BTC"
     const data = await fetch(`https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=${coin}`, {
         headers: {
             "X-CMC_PRO_API_KEY": process.env.CMC_API_KEY
         }
     }).then(res => res.json()).catch(err => console.error(err))
-    const transformedData = { symbol: coin, name: data.data[coin][0].name, description: data.data[coin][0].description, logo: data.data[coin][0].logo, website: data.data[coin][0].urls.website[0], twitter: data.data[coin][0].urls.twitter[0], explorer: data.data[coin][0].urls.explorer[0], reddit: data.data[coin][0].urls.reddit[0], technicalDocs: data.data[coin][0].urls.technical_doc[0], sourceCode: data.data[coin][0].urls.source_code[0], launched: data.data[coin][0].urls.date_launched }
+    const transformedData = { symbol: coin, name: data.data[coin][0].name, description: data.data[coin][0].description, logo: data.data[coin][0].logo, website: data.data[coin][0].urls.website[0], twitter: data.data[coin][0].urls.twitter[0], explorer: data.data[coin][0].urls.explorer[0], reddit: data.data[coin][0].urls.reddit[0], technicalDocs: data.data[coin][0].urls.technical_doc[0], sourceCode: data.data[coin][0].urls.source_code[0], launched: data.data[coin][0].date_launched }
     res.send(transformedData)
 })
 
