@@ -26,10 +26,12 @@ const linechartData = computed(() => {
         const relativePercent = portfolioPercent.value[coin] / allPercent || 1
         const coinAmount = (portfolioValue.value * relativePercent) / Number(coinHistory.value[coin][0].price)
         coinHistory.value[coin].forEach(value => {
-            if (!internalLinechartData[value.time]) {
-                internalLinechartData[value.time] = coinAmount * Number(value.price)
-            } else {
-                internalLinechartData[value.time] += coinAmount * Number(value.price)
+            if (value.time >= portfolioStartDate.value) {
+                if (!internalLinechartData[value.time]) {
+                    internalLinechartData[value.time] = coinAmount * Number(value.price)
+                } else {
+                    internalLinechartData[value.time] += coinAmount * Number(value.price)
+                }
             }
         })
     })
