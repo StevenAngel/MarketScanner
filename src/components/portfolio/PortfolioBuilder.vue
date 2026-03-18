@@ -15,16 +15,15 @@ const portfolioPercent = ref({})
 const selectableCoins = ref([])
 const selectedCoins = ref([])
 const coinHistory = ref({})
+const portfolioStartDate = ref(null)
 const portfolioValue = ref(1000)
 const linechartData = computed(() => {
     let internalLinechartData = {}
     let linechartData = {}
     const activeCoins = selectedCoins.value.filter(coin => coinHistory.value[coin])
     const allPercent = activeCoins.length > 0 ? activeCoins.reduce((accumulator, coin) => Number(accumulator) + Number(portfolioPercent.value[coin]), 0) : 100
-    console.log(allPercent)
     activeCoins.forEach(coin => {
         const relativePercent = portfolioPercent.value[coin] / allPercent || 1
-        console.log("relative", relativePercent)
         const coinAmount = (portfolioValue.value * relativePercent) / Number(coinHistory.value[coin][0].price)
         coinHistory.value[coin].forEach(value => {
             if (!internalLinechartData[value.time]) {
@@ -57,21 +56,37 @@ const fetchCoin = async (coin, isChecked) => {
         // Set portfolio percent value
         portfolioPercent.value[coin] = 100
         selectedCoins.value.push(coin)
-        if (!coinHistory.value[coin]) {
+        if (!coinHistory.value[coin] || Number(coinHistory.value[coin][0].time) > portfolioStartDate.value) {
             const history = await fetch("http://localhost:3000/coinHistory", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json" // Sag dem Server: "Hier kommt JSON!"
+                    "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ coin: coin })
+                body: JSON.stringify({ coin, timestamp: portfolioStartDate.value })
             }).then(res => res.json()).catch(err => console.error(err))
             coinHistory.value[coin] = history
         }
-
     } else {
         const index = selectedCoins.value.indexOf(coin)
         if (index > -1) selectedCoins.value.splice(index, 1)
     }
+}
+
+const fetchCoinsToDate = async (date) => {
+    const timestamp = new Date(date.target.value).getTime()
+    portfolioStartDate.value = timestamp;
+    selectedCoins.value.forEach(async (coin) => {
+        if (Number(coinHistory.value[coin][0].time) > timestamp) {
+            const history = await fetch("http://localhost:3000/coinHistory", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ coin, timestamp: portfolioStartDate.value })
+            }).then(res => res.json()).catch(err => console.error(err))
+            coinHistory.value[coin] = history
+        }
+    })
 }
 
 const updatePortfolioValue = (input) => {
@@ -110,7 +125,7 @@ onMounted(loadMarkets)
                 <p>
                     Portfolio start date:
                 </p>
-                <input type="date" />
+                <input type="date" @input="fetchCoinsToDate" />
             </div>
         </div>
         <div class="portfolio">
