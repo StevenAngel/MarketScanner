@@ -134,7 +134,8 @@ onMounted(loadMarkets)
             <CryptoSelector :selectableCoins="selectableCoins" @coinSelected="fetchCoin"
                 @coinPercentSelected="updatePortfolioPercent" />
             <LineChart class="chart" :lineChartDataX="linechartData.linechartDataX"
-                :lineChartDataY="linechartData.linechartDataY" :loading="false" :loading-options="loadingOptions" />
+                :lineChartDataY="linechartData.linechartDataY" :loading="false" :loading-options="loadingOptions"
+                title="Portfolio Builder" />
         </div>
     </div>
 </template>

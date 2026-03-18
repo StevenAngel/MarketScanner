@@ -91,12 +91,12 @@ watch(address, (newVal,) => {
             <PieChart class="chart" :chartData="pieChartData" :chartSubtext="subtext" :chartTotalValue="totalValue"
                 :isLoading="isLoading" :loadingOptions="loadingOptions" />
             <LineChart class="chart" :lineChartDataX="lineChartDataX" :lineChartDataY="lineChartDataY"
-                :loading="isLoading" :loading-options="loadingOptions" />
+                :loading="isLoading" :loading-options="loadingOptions" title="Portfolio Performance Last 2 Years" />
 
         </div>
     </div>
     <div v-else>
-        <h1 class="connectMessage">Please Connect Your Wallet to View Your Portfolio</h1>
+        <h1 class=" connectMessage">Please Connect Your Wallet to View Your Portfolio</h1>
     </div>
     <PortfolioBuilder />
 </template>

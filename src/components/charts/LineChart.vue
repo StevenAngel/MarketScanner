@@ -5,12 +5,12 @@ import { LineChart } from "echarts/charts";
 import { GridComponent } from "echarts/components";
 import VChart from "vue-echarts";
 import { computed } from "vue";
-const props = defineProps(['lineChartDataX', 'lineChartDataY', 'isLoading', 'loadingOptions'])
+const props = defineProps(['lineChartDataX', 'lineChartDataY', 'isLoading', 'loadingOptions', 'title'])
 use([CanvasRenderer, LineChart, GridComponent]);
 
 const lineChartOptions = computed(() => ({
     title: {
-        text: "Portfolio Performance Last 2 Years",
+        text: props.title,
         left: "center",
         textStyle: {
             color: "#ffffff",
