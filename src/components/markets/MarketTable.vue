@@ -117,7 +117,7 @@ async function loadMarkets() {
   tickers = tickers.filter(item => item.symbol.endsWith("USDT"))
   tickers = tickers.sort((a, b) => Number(b.quoteVolume) - Number(a.quoteVolume))
   if (Object.entries(appState.cryptos).length == 0) {
-    appState.cryptos = tickers
+    appState.cryptos = tickers.map((value) => value.symbol.replace("USDT", ""))
   }
 
   tickers = tickers.slice(0, 200)

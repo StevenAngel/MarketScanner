@@ -108,6 +108,8 @@ async function loadMarkets() {
         tickers = tickers.sort((a, b) => Number(b.quoteVolume) - Number(a.quoteVolume))
         selectableCoins.value = tickers.map((value) => value.symbol.replace("USDT", ""))
         appState.cryptos = selectableCoins.value;
+    } else {
+        selectableCoins.value = appState.cryptos
     }
 }
 
