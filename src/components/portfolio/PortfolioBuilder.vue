@@ -1,11 +1,3 @@
-/**
-STRUCTURE:
-- ref -> selectedCoins
-- object -> coinHistory
-- backend -> binance fetch history (only if not already in coinHistory)
-- frontend -> coin selector, date picker for entry, lineChart, fetch available coins for coin selector (use ticker from
-cointable)
-*/
 <script setup>
 import CryptoSelector from './CryptoSelector.vue';
 import { onMounted, ref, computed } from 'vue';

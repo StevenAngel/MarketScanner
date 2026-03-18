@@ -45,6 +45,9 @@ import LightModeSwitch from './LightModeSwitch.vue';
                 <span title="CoinMarketCap API"><img
                         src="https://images.icon-icons.com/3911/PNG/512/coinmarketcap_logo_icon_247296.png"
                         class="tech-badge" alt="CoinMarketCap API" /></span>
+                <span title="Reown"><img
+                        src="https://reown.com/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fuvy10p5b%2Fproduction%2F01495a4964c8df30a7e8859c4f469e67dc9545a2-1024x1024.png&w=3840&q=100"
+                        class="tech-badge" alt="Reown" /></span>
             </div>
             <div class="features">
                 <p>🌐 <strong>REST:</strong> Historical Data & Market Overview</p>
@@ -97,6 +100,7 @@ import LightModeSwitch from './LightModeSwitch.vue';
 
 .tech-badge {
     width: 50px;
+    height: 50px;
     transition: linear 0.2s;
 }
 
