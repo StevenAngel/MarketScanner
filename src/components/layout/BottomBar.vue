@@ -37,11 +37,14 @@ import LightModeSwitch from './LightModeSwitch.vue';
                         alt="Vue 3" /></span>
                 <span title="Vite"><img src="https://icon.icepanel.io/Technology/svg/Vite.js.svg" class="tech-badge"
                         alt="Vite" /></span>
+                <span title="ECharts"><img src="https://raw.githubusercontent.com/nuxt/modules/main/icons/echarts.svg"
+                        class="tech-badge" alt="Binance API" /></span>
                 <span title="Binance API"><img
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Binance_Logo.png/960px-Binance_Logo.png"
                         class="tech-badge" alt="Binance API" /></span>
-                <span title="ECharts"><img src="https://raw.githubusercontent.com/nuxt/modules/main/icons/echarts.svg"
-                        class="tech-badge" alt="Binance API" /></span>
+                <span title="CoinMarketCap API"><img
+                        src="https://images.icon-icons.com/3911/PNG/512/coinmarketcap_logo_icon_247296.png"
+                        class="tech-badge" alt="CoinMarketCap API" /></span>
             </div>
             <div class="features">
                 <p>🌐 <strong>REST:</strong> Historical Data & Market Overview</p>
