@@ -8,18 +8,36 @@ cointable)
 */
 <script setup>
 import CryptoSelector from './CryptoSelector.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { appState } from '../stores/crypto.js'
 import LineChart from '../charts/LineChart.vue';
 const portfolioPercent = ref({})
 const selectableCoins = ref([])
 const selectedCoins = ref([])
-const linechartData = ref({ linechartDataX: [], linechartDataY: [] })
-// const linechartDataX = ref([])
-// const linechartDataY = ref([])
+const coinHistory = ref({})
 const portfolioValue = ref(1000)
-let internalLinechartData = {}
-const coinHistory = {}
+const linechartData = computed(() => {
+    let internalLinechartData = {}
+    let linechartData = {}
+    const activeCoins = selectedCoins.value.filter(coin => coinHistory.value[coin])
+    activeCoins.forEach(coin => {
+        const coinPercent = portfolioPercent.value[coin] / 100 || 1
+        const coinAmount = ((portfolioValue.value * coinPercent) / activeCoins.length) / Number(coinHistory.value[coin][0].price)
+        coinHistory.value[coin].forEach(value => {
+            if (!internalLinechartData[value.time]) {
+                internalLinechartData[value.time] = coinAmount * Number(value.price)
+            } else {
+                internalLinechartData[value.time] += coinAmount * Number(value.price)
+            }
+        })
+    })
+
+    internalLinechartData = Object.fromEntries(Object.entries(internalLinechartData).sort((a, b) => a.time - b.time))
+    linechartData.linechartDataX = Object.entries(internalLinechartData).map(value => new Date(Number(value[0])).toLocaleDateString())
+    linechartData.linechartDataY = Object.entries(internalLinechartData).map(value => value[1])
+    return linechartData
+})
+
 const loadingOptions = {
     text: 'Loading...',
     color: '#6366f1',
@@ -34,7 +52,7 @@ const loadingOptions = {
 const fetchCoin = async (coin, isChecked) => {
     if (isChecked) {
         selectedCoins.value.push(coin)
-        if (!coinHistory[coin]) {
+        if (!coinHistory.value[coin]) {
             const history = await fetch("http://localhost:3000/coinHistory", {
                 method: "POST",
                 headers: {
@@ -42,44 +60,27 @@ const fetchCoin = async (coin, isChecked) => {
                 },
                 body: JSON.stringify({ coin: coin })
             }).then(res => res.json()).catch(err => console.error(err))
-            coinHistory[coin] = history
+            coinHistory.value[coin] = history
         }
     } else {
         const index = selectedCoins.value.indexOf(coin)
         if (index > -1) selectedCoins.value.splice(index, 1)
     }
-
-    updateLineChart()
 }
 
 const updatePortfolioValue = (input) => {
     if (input.target.value != '') portfolioValue.value = Number(input.target.value)
-    updateLineChart()
+    // updateLineChart()
 }
 
 const updateLineChart = () => {
-    internalLinechartData = {}
-    selectedCoins.value.forEach(coin => {
-        const coinPercent = portfolioPercent.value[coin] / 100 || 1
-        const coinAmount = ((portfolioValue.value * coinPercent) / selectedCoins.value.length) / Number(coinHistory[coin][0].price)
-        coinHistory[coin].forEach(value => {
-            if (!internalLinechartData[value.time]) {
-                internalLinechartData[value.time] = coinAmount * Number(value.price)
-            } else {
-                internalLinechartData[value.time] += coinAmount * Number(value.price)
-            }
-        })
-    })
 
-    internalLinechartData = Object.fromEntries(Object.entries(internalLinechartData).sort((a, b) => a.time - b.time))
-    linechartData.value.linechartDataX = Object.entries(internalLinechartData).map(value => new Date(Number(value[0])).toLocaleDateString())
-    linechartData.value.linechartDataY = Object.entries(internalLinechartData).map(value => value[1])
 }
 
 const updatePortfolioPercent = (coin, percent) => {
     console.log(coin, percent)
     portfolioPercent.value[coin] = percent
-    updateLineChart()
+    // updateLineChart()
 }
 
 // Load markets if not already done
