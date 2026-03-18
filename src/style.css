@@ -33,6 +33,7 @@ html.light .logo {
 
 body,
 .navbar,
+.bottombar,
 .newsCategories {
     transition: background-color 0.4s ease, color 0.4s ease !important;
 }

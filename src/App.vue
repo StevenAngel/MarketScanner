@@ -1,6 +1,7 @@
 <script setup>
-import Navbar from './components/layout/Navbar.vue'
 import MarqueeBar from './components/layout/MarqueeBar.vue'
+import Navbar from './components/layout/Navbar.vue'
+import BottomBar from './components/layout/BottomBar.vue'
 /**
  * Reowned appkit for vue to connect your wallet
  * Whole setup below
@@ -52,6 +53,7 @@ const modal = createAppKit({
       <component :is="Component" />
     </keep-alive>
   </router-view>
+  <BottomBar />
 </template>
 
 <style scoped></style>
