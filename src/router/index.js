@@ -18,6 +18,13 @@ const router = createRouter({
       path: '/portfolio',
       name: 'portfolio',
       component: () => import('@/views/PortfolioView.vue') // Lazy loading
+    },
+    {
+      path: '/coin/:coin',
+      name: 'coin',
+      component: () => import('@/views/CoinView.vue'),
+      // Best Practice: Wandelt URL-Parameter (:coin) in Props um
+      props: true
     }
   ],
 })
