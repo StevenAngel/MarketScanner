@@ -47,8 +47,8 @@ const coinPercentSelected = (coin, value) => {
                     <!-- use emit, because then i need no "watch" to start a function -->
                     <input type="checkbox" :value="item" @change="coinSelected(item, $event)" />
                     <span>{{ item }}</span>
-                    <input v-if="selectedCoins.includes(item)" class="percentInput" type="number" :value="item"
-                        placeholder="% of portfolio" @change="coinPercentSelected(item, $event)" />
+                    <input v-if="selectedCoins.includes(item)" class="percentInput" type="number"
+                        placeholder="% of portfolio" value="100" @change="coinPercentSelected(item, $event)" />
                 </label>
             </li>
         </ul>

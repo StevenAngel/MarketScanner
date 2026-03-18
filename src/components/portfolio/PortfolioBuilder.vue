@@ -54,6 +54,8 @@ const loadingOptions = {
 // Fetch coin history from binance (backend)
 const fetchCoin = async (coin, isChecked) => {
     if (isChecked) {
+        // Set portfolio percent value
+        portfolioPercent.value[coin] = 100
         selectedCoins.value.push(coin)
         if (!coinHistory.value[coin]) {
             const history = await fetch("http://localhost:3000/coinHistory", {
@@ -65,6 +67,7 @@ const fetchCoin = async (coin, isChecked) => {
             }).then(res => res.json()).catch(err => console.error(err))
             coinHistory.value[coin] = history
         }
+
     } else {
         const index = selectedCoins.value.indexOf(coin)
         if (index > -1) selectedCoins.value.splice(index, 1)
@@ -76,8 +79,8 @@ const updatePortfolioValue = (input) => {
 }
 
 const updatePortfolioPercent = (coin, percent) => {
-    console.log(coin, percent)
-    portfolioPercent.value[coin] = percent
+    const value = Math.max(0, Number(percent));
+    portfolioPercent.value[coin] = value
 }
 
 // Load markets if not already done
