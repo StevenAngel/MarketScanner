@@ -9,7 +9,7 @@
 ### 🏠 Market Overview — Live Ticker Table
 - Displays the **Top 100 / Top 200** USDT perpetual futures from Binance, sorted by 24h trading volume
 - All prices and stats update **in real-time** via a **Binance WebSocket** connection (`wss://fstream.binance.com`)
-- Sortable columns: **#, Symbol, Price, Change %, Change \$, Volume, Volume \$**
+- Sortable columns: **#, Symbol, Price, Change %, Change `$`, Volume, Volume `$`**
 - Price changes are color-coded (green / red) for quick scanning
 - Toggle between **Top 100** and **Top 200** coins with a single button
 - Click any coin in the table to navigate to its dedicated detail page
