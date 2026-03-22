@@ -20,6 +20,10 @@ const router = createRouter({
       component: () => import('@/views/PortfolioView.vue') // Lazy loading
     },
     {
+      path: '/coin',
+      redirect: { name: 'home' } // Oder redirect: '/' falls du keinen Namen nutzt
+    },
+    {
       path: '/coin/:coin',
       name: 'coin',
       component: () => import('@/views/CoinView.vue'),
