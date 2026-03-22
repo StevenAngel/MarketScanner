@@ -14,4 +14,10 @@ import NewsFeedSidebar from '../components/newsFeed/NewsFeedSidebar.vue';
 .tableFeed {
     display: flex;
 }
+
+@media (max-width: 768px) {
+    .tableFeed {
+        flex-direction: column;
+    }
+}
 </style>
